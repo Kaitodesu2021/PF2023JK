@@ -76,21 +76,20 @@ void startup()
     std::cout << "Press Enter to Continue <";
     std::cin.get();
     cout << "\n" << endl;
-
-    cout << "================================" << endl;
-    cout << "        Default Settings" << endl;
-    cout << "================================" << endl;
-    cout << "Board Rows      : "<< info.row << endl;
-    cout << "Board Columns   : "<< info.column << endl;
-    cout << "Zombie(s) Count : "<< info.zombies << endl;
-    cout << "================================" << endl;
 }
 
 void settings()
 {
-
     game info;
     game go;
+    
+    cout << "================================" << endl;
+    cout << "        Default Settings" << endl;
+    cout << "================================" << endl;
+    cout << "Board Rows      : "<< "your_row" << endl;
+    cout << "Board Columns   : "<< "your_column" << endl;
+    cout << "Zombie(s) Count : "<< info.zombies << endl;
+    cout << "================================" << endl;
 
     cout << "Change Settings? (y/n) : ";
     cin >> info.yesno;
@@ -99,11 +98,41 @@ void settings()
         cout << "How many row(s)? :" << endl;
         cin >> info.y_;
 
+        cout << "How many column(s)? :" << endl;
+        cin >> info.x_;
+
+        settings();
+    }
+    else if (info.yesno == 'n') {
+        cout << "Launching Game...\n" << endl;
+        go.game::display();
+    }
+}
+
+void defaultsettings()
+{
+    game info;
+    game go;
+
+    cout << "================================" << endl;
+    cout << "        Default Settings" << endl;
+    cout << "================================" << endl;
+    cout << "Board Rows      : "<< "5" << endl;
+    cout << "Board Columns   : "<< "5" << endl;
+    cout << "Zombie(s) Count : "<< info.zombies << endl;
+    cout << "================================" << endl;
+
+    cout << "Change Settings? (y/n) : ";
+    cin >> info.yesno;
+
+    if (info.yesno == 'y') {
+        cout << "How many row(s)? :" << endl;
+        cin >> info.y_;
 
         cout << "How many column(s)? :" << endl;
         cin >> info.x_;
 
-        go.game::display();
+        settings();
     }
     else if (info.yesno == 'n') {
         cout << "Launching Game...\n" << endl;
@@ -179,5 +208,5 @@ void game::display() const
 int main()
 {
     startup();
-    settings();
+    defaultsettings();
 }
