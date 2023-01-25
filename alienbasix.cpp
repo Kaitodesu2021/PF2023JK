@@ -1,244 +1,212 @@
+// ********************************************************* 
+// Course: TCP1101 PROGRAMMING FUNDAMENTALS 
+// Year: Trimester 1, 2022/23 (T2215) 
+// Lab: TT5L 
+// Names: MEMBER_NAME_1 | MEMBER_NAME_2 | 
+// IDs: 1211103373 | MEMBER_ID_2 | 
+// Emails: 1211103373@student.mmu.edu.my | MEMBER_EMAIL_2 | 
+// Phones: 0174622108 | MEMBER_PHONE_2 | 
+// ********************************************************* 
+
+#include "pf/helper.h"
 #include <iostream>
+#include <dos.h>
+#include <chrono>
+#include <thread>
 #include <string>
 #include <vector>
 #include <cstdlib> // for system()
-#include <ctime> // for time() in srand( time(NULL) );
 #include <iomanip> // for setw()
 using namespace std;
 
-class Mars
+class game //column = column , row = row
 {
-private:
+    private:
+        vector< vector<char> > map_; // convention to put trailing underscore
+        int column_, row_; // to indicate private data
+    public:
+        int column, row;
+        int x, y, x_, y_;
+        int zombies = 1;
+        char yesno;
 
-    vector< vector<char> > map_; // convention to put trailing underscore
-    int dimX_, dimY_; // to indicate private data
-
-public:
-
-    Mars(int dimX = 15, int dimY = 5);
-    void init(int dimX, int dimY);
-    void display() const;
-    int getDimX() const;
-    int getDimY() const;
-    char getObject(int x, int y) const;
-    void setObject(int x, int y, char ch);
-    bool isEmpty(int x, int y);
-    bool isInsideMap(int x, int y);
+        game(int column = 5, int row = 5);
+        void init(int column, int row);
+        void display() const;
 };
 
-int Mars::getDimX() const
+game::game(int column, int row)
 {
-    return dimX_;
-}
-int Mars::getDimY() const
-{
-    return dimY_;
+    init(column, row); 
 }
 
-Mars::Mars(int dimX, int dimY)
+void game::init(int column, int row)
 {
-    init(dimX, dimY);
-}
+    column_ = column;
+    row_ = row;
 
-    void Mars::init(int dimX, int dimY)
-{
-    dimX_ = dimX;
-    dimY_ = dimY;
-
-    char objects[] = {' ', ' ', ' ', ' ', ' ', ' ', 'X', '#', '@', '$'};
+    char objects[] = { '^', 'v', '>', '<', 'h', 'p', 'r', ' ', ' ', ' '};
     int noOfObjects = 10; // number of objects in the objects array
 
     // create dynamic 2D array using vector
-    map_.resize(dimY_); // create empty rows
-    for (int i = 0; i < dimY_; ++i)
+    map_.resize(row_); // create empty rows
+    for (int i = 0; i < row_; ++i)
     {
-        map_[i].resize(dimX_); // resize each row
+        map_[i].resize(column_); // resize each row
     }
 
     // put random characters into the vector array
-    for (int i = 0; i < dimY_; ++i)
+    for (int i = 0; i < row_; ++i)
     {
-        for (int j = 0; j < dimX_; ++j)
+        for (int j = 0; j < column_; ++j)
         {
             int objNo = rand() % noOfObjects;
             map_[i][j] = objects[objNo];
         }
     }
 }
-bool Mars::isEmpty(int x, int y)
+
+void startup() 
 {
-    return map_[dimY_ - y ][ x - 1] == ' ';
-}
-bool Mars::isInsideMap(int x, int y)
-{
-    return x >= 1 && x <= dimX_ && y >= 1 && y <= dimY_;
+    game info;
+    cout << "Assignment (Part 1)" << endl;
+    cout << "===================" << endl;
+    cout << "Launching Alien VS Zombies...\n" << endl;
+
+    std::cout << "Press Enter to Continue <";
+    std::cin.get();
+    cout << "\n" << endl;
 }
 
-void Mars::setObject(int x, int y, char ch )
+void settings()
 {
-    map_[dimY_ - y ][ x - 1] = ch;
+    game info;
+    game go;
+    
+    cout << "================================" << endl;
+    cout << "        Default Settings" << endl;
+    cout << "================================" << endl;
+    cout << "Board Rows      : "<< "your_row" << endl;
+    cout << "Board Columns   : "<< "your_column" << endl;
+    cout << "Zombie(s) Count : "<< info.zombies << endl;
+    cout << "================================" << endl;
+
+    cout << "Change Settings? (y/n) : ";
+    cin >> info.yesno;
+
+    if (info.yesno == 'y') {
+        cout << "How many row(s)? :" << endl;
+        cin >> info.y_;
+
+        cout << "How many column(s)? :" << endl;
+        cin >> info.x_;
+
+        settings();
+    }
+    else if (info.yesno == 'n') {
+        cout << "Launching Game...\n" << endl;
+        go.game::display();
+    }
 }
 
-void Mars::display() const
+void defaultsettings()
 {
-    // comment this out during testing
-    // system("cls"); // OR system("clear"); for Linux / MacOS
+    game info;
+    game go;
 
-    cout << " --__--__--__--__--__--__--__--_" << endl;
-    cout << ".: Alien VS Zombies :." << endl;
-    cout << " __--__--__--__--__--__--__--__-" << endl;
+    cout << "================================" << endl;
+    cout << "        Default Settings" << endl;
+    cout << "================================" << endl;
+    cout << "Board Rows      : "<< "5" << endl;
+    cout << "Board Columns   : "<< "5" << endl;
+    cout << "Zombie(s) Count : "<< info.zombies << endl;
+    cout << "================================" << endl;
+
+    cout << "Change Settings? (y/n) : ";
+    cin >> info.yesno;
+
+    if (info.yesno == 'y') {
+        cout << "How many row(s)? :" << endl;
+        cin >> info.y_;
+
+        cout << "How many column(s)? :" << endl;
+        cin >> info.x_;
+
+        settings();
+    }
+    else if (info.yesno == 'n') {
+        cout << "Launching Game...\n" << endl;
+        go.game::display();
+    }
+}
+
+void game::display() const
+{
+    // header
+    game info;
+    for (int j = 0; j < column_; ++j)
+    {
+        cout << "====";
+    }
+    cout << "====" << endl;
+    cout << "> Alien Vs Zombies" << endl;
+
+    // divider
+    for (int j = 0; j < column_; ++j)
+    {
+        cout << "====";
+    }
+    cout << "====" << endl;
 
     // for each row
-    for (int i = 0; i < dimY_; ++i)
+    for (int i = 0; i < row_; ++i)
     {
         // display upper border of the row
-        cout << " ";
-        for (int j = 0; j < dimX_; ++j)
+        cout << "   ";
+        for (int j = 0; j < column_; ++j)
         {
-            cout << "+-";
+            cout << "+---";
         }
         cout << "+" << endl;
 
         // display row number
-        cout << setw(2) << (dimY_ - i);
+        cout << setw(2) << (row_ - i);
 
         // display cell content and border of each column
-        for (int j = 0; j < dimX_; ++j)
+        cout << "";
+        for (int j = 0; j < column_; ++j)
         {
-            cout << "|" << map_[i][j];
+            cout << " | " << map_[i][j];
         }
-        cout << "|" << endl;
+        cout << " |" << endl;
     }
 
     // display lower border of the last row
-    cout << " ";
-    for (int j = 0; j < dimX_; ++j)
+    cout << "   ";
+    for (int j = 0; j < column_; ++j)
     {
-        cout << "+-";
+        cout << "+---";
     }
     cout << "+" << endl;
-    
+
     // display column number
-    cout << " ";
-    for (int j = 0; j < dimX_; ++j)
+    cout << "  ";
+    for (int j = 0; j < column_; ++j)
     {
-        int digit = (j + 1) / 10;
-        cout << " ";
-        if (digit == 0)
-            cout << " ";
-        else
-            cout << digit;
+        cout << "   " << (j + 1) % 10;
     }
     cout << endl;
-    cout << " ";
-    for (int j = 0; j < dimX_; ++j)
+
+    // divider
+    for (int j = 0; j < column_; ++j)
     {
-        cout << " " << (j + 1) % 10;
+        cout << "====";
     }
-    cout << endl << endl;
-}
-char Mars::getObject(int x, int y) const
-{
-    return map_[ dimY_ - y ][x - 1];
-}
-void test1_1()
-{
-    Mars mars;
-    mars.display();
-}
-
-void test1_3()
-{
-
-Mars mars;
-    // mars.display();
-    cout << "Dim X = " << mars.getDimX() << endl;
-    cout << "Dim Y = " << mars.getDimY() << endl;
-}
-
-void test1_4()
-{
-    Mars mars;
-    mars.display();
-
-    int x, y;
-    char obj;
-
-    x = 1; y = 1;
-    obj = mars.getObject(x, y);
-    cout << "Object at column " << x << " and row " << y << " is ["
-         << obj << "]" << endl;
-    x = 15; y = 2;
-    obj = mars.getObject(x, y);
-    cout << "Object at column " << x << " and row " << y << " is ["
-         << obj << "]" << endl;
-
-    x = 5; y = 5;
-    obj = mars.getObject(x, y);
-    cout << "Object at column " << x << " and row " << y << " is ["
-         << obj << "]" << endl;
-    x = 10; y = 2;
-    obj = mars.getObject(x, y);
-    cout << "Object at column " << x << " and row " << y << " is ["
-         << obj << "]" << endl;
-}
-
-void test1_5()
-{
-Mars mars;
-    int x1 = 1, y1 = 1; char ch1 = 'A';
-    int x2 = 15, y2 = 1; char ch2 = 'B';
-    int x3 = 15, y3 = 5; char ch3 = 'C';
-    int x4 = 1, y4 = 5; char ch4 = 'D';
-    int x5 = 7, y5 = 3; char ch5 = 'E';
-mars.setObject(x1, y1, ch1);
-mars.setObject(x2, y2, ch2);
-mars.setObject(x3, y3, ch3);
-mars.setObject(x4, y4, ch4);
-mars.setObject(x5, y5, ch5);
-mars.display();
-    cout << "The object " << ch1 << " should be at column "
-         << x1 << " and row " << y1 << endl;
-    cout << "The object " << ch2 << " should be at column "
-         << x2 << " and row " << y2 << endl;
-    cout << "The object " << ch3 << " should be at column "
-         << x3 << " and row " << y3 << endl;
-    cout << "The object " << ch4 << " should be at column "
-         << x4 << " and row " << y4 << endl;
-    cout << "The object " << ch5 << " should be at column "
-         << x5 << " and row " << y5 << endl;
-}
-
-void test1_6()
-{
-Mars mars;
-    int x1 = 2, y1 = 4; char ch1 = 'Z';
-    int x2 = 10, y2 = 3; char ch2 = ' ';
-mars.setObject(x1, y1, ch1);
-mars.setObject(x2, y2, ch2);
-mars.display();
-    cout << boolalpha;
-    cout << "Is (" << x1 << ", " << y1 << ") empty? Answer = "
-         << mars.isEmpty(x1, y1) << endl;
-    cout << "Is (" << x2 << ", " << y2 << ") empty? Answer = "
-         << mars.isEmpty(x2, y2) << endl;
-    int x3 = 15, y3 = 5;
-    int x4 = 0, y4 = 3;
-    cout << "Is (" << x3 << ", " << y3 << ") inside map? Answer = "
-         << mars.isInsideMap(x3, y3) << endl;
-    cout << "Is (" << x4 << ", " << y4 << ") inside map? Answer = "
-         << mars.isInsideMap(x4, y4) << endl;
+    cout << "====" << endl;
 }
 
 int main()
 {
-    srand(1);           // use this for fixed map during testing
-    //srand(time(NULL));  // try this for random map
-
-    test1_1();
-    //test1_3();
-    //test1_4();
-    //test1_5();
-    //test1_6();
-
+    startup();
+    defaultsettings();
 }
