@@ -18,6 +18,8 @@
 #include <cstdlib> // for system()
 #include <iomanip> // for setw()
 using namespace std;
+int noOfcolumn = 5 ,noOfrow = 5 ;
+
 
 class game //column = column , row = row
 {
@@ -25,12 +27,14 @@ class game //column = column , row = row
         vector< vector<char> > map_; // convention to put trailing underscore
         int column_, row_; // to indicate private data
     public:
+
+    
         int column, row;
         int x, y, x_, y_;
         int zombies = 1;
         char yesno;
-
-        game(int column = 5, int row = 5);
+        
+        game(int column = noOfcolumn , int row = noOfrow);
         void init(int column, int row);
         void display() const;
 };
@@ -86,8 +90,8 @@ void settings()
     cout << "================================" << endl;
     cout << "        Default Settings" << endl;
     cout << "================================" << endl;
-    cout << "Board Rows      : "<< "your_row" << endl;
-    cout << "Board Columns   : "<< "your_column" << endl;
+    cout << "Board Rows      : "<< noOfrow << endl;
+    cout << "Board Columns   : "<< noOfcolumn << endl;
     cout << "Zombie(s) Count : "<< info.zombies << endl;
     cout << "================================" << endl;
 
@@ -96,10 +100,10 @@ void settings()
 
     if (info.yesno == 'y') {
         cout << "How many row(s)? :" << endl;
-        cin >> info.y_;
+        cin >> noOfrow;
 
         cout << "How many column(s)? :" << endl;
-        cin >> info.x_;
+        cin >> noOfcolumn;
 
         settings();
     }
@@ -117,8 +121,8 @@ void defaultsettings()
     cout << "================================" << endl;
     cout << "        Default Settings" << endl;
     cout << "================================" << endl;
-    cout << "Board Rows      : "<< "5" << endl;
-    cout << "Board Columns   : "<< "5" << endl;
+    cout << "Board Rows      : "<< noOfrow << endl;
+    cout << "Board Columns   : "<< noOfcolumn << endl;
     cout << "Zombie(s) Count : "<< info.zombies << endl;
     cout << "================================" << endl;
 
@@ -127,10 +131,10 @@ void defaultsettings()
 
     if (info.yesno == 'y') {
         cout << "How many row(s)? :" << endl;
-        cin >> info.y_;
+        cin >> noOfrow;
 
         cout << "How many column(s)? :" << endl;
-        cin >> info.x_;
+        cin >> noOfcolumn;
 
         settings();
     }
@@ -207,6 +211,8 @@ void game::display() const
 
 int main()
 {
+
     startup();
     defaultsettings();
+    //settings();
 }
