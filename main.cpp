@@ -19,7 +19,8 @@
 #include <iomanip> // for setw()
 using namespace std;
 
-int noOfcolumn = 5 ,noOfrow = 5 ;
+int noOfcolumn = 5 ,noOfrow = 5 , zombies = 1;
+string name_setting = "Default Settings";
 
 class game //column = column , row = row
 {
@@ -29,7 +30,6 @@ class game //column = column , row = row
     public:
         int column, row;
         int x, y, x_, y_;
-        int zombies = 1;
         int oddnum_row, oddnum_column;
         char yesno;
         int row_true = 0, column_true = 0;
@@ -82,69 +82,15 @@ void startup() // startup interface
     cout << "\n" << endl;
 }
 
-void settings() // the second setting interface to pop out and so on
+int board_settings()
 {
     game info;
-    game go;
     
     cout << "================================" << endl;
-    cout << "        Default Settings" << endl;
-    cout << "================================" << endl;
-    cout << "Board Rows      : "<< noOfrow << endl;
-    cout << "Board Columns   : "<< noOfcolumn << endl;
-    cout << "Zombie(s) Count : "<< info.zombies << endl;
+    cout << "         Board Settings" << endl;
     cout << "================================" << endl;
 
-    cout << "Change Settings? (y/n) : ";
-    cin >> info.yesno;
-
-    if (info.yesno == 'y') { // if input is yes
-        while (info.row_true < 1) { // checking whether row input is odd (3/5/7/9)
-        cout << "How many row(s)? :  ";
-        cin >> info.oddnum_row;
-        if (info.oddnum_row == 3 || info.oddnum_row == 5 || info.oddnum_row == 7 || info.oddnum_row == 9) {
-            noOfrow = info.oddnum_row;
-            info.row_true = 1;
-        } else {
-            cout << "Please enter 3/5/7/9 only!!!" << endl << endl;
-        }
-        }
-        while (info.column_true < 1) { // checking whether column input is odd (3/5/7/9)
-        cout << "How many column(s)? : ";
-        cin >> info.oddnum_column;
-        if (info.oddnum_column == 3 || info.oddnum_column == 5 || info.oddnum_column == 7 || info.oddnum_column == 9) {
-            noOfcolumn = info.oddnum_column;
-            info.column_true = 1;
-        } else {
-            cout << "Please enter 3/5/7/9 only!!!" << endl << endl;
-        }
-        }
-        settings();
-    }
-    else if (info.yesno == 'n') { // if input is no
-        cout << "Launching Game...\n" << endl;
-        go.game::display();
-    }
-}
-
-void defaultsettings() // the first setting interface to pop out
-{
-    game info;
-    game go;
-
-    cout << "================================" << endl;
-    cout << "        Default Settings" << endl;
-    cout << "================================" << endl;
-    cout << "Board Rows      : "<< noOfrow << endl;
-    cout << "Board Columns   : "<< noOfcolumn << endl;
-    cout << "Zombie(s) Count : "<< info.zombies << endl;
-    cout << "================================" << endl;
-
-    cout << "Change Settings? (y/n) : ";
-    cin >> info.yesno;
-
-    if (info.yesno == 'y') { // if input is yes
-        while (info.row_true < 1) { // checking whether row input is odd (3/5/7/9)
+    while (info.row_true < 1) { // checking whether row input is odd (3/5/7/9)
         cout << "How many row(s)? : ";
         cin >> info.oddnum_row;
         if (info.oddnum_row == 3 || info.oddnum_row == 5 || info.oddnum_row == 7 || info.oddnum_row == 9) {
@@ -153,8 +99,8 @@ void defaultsettings() // the first setting interface to pop out
         } else {
             cout << "Please enter 3/5/7/9 only!!!" << endl << endl;
         }
-        }
-        while (info.column_true < 1) { // checking whether column input is odd (3/5/7/9)
+    }
+    while (info.column_true < 1) { // checking whether column input is odd (3/5/7/9)
         cout << "How many column(s)? : ";
         cin >> info.oddnum_column;
         if (info.oddnum_column == 3 || info.oddnum_column == 5 || info.oddnum_column == 7 || info.oddnum_column == 9) {
@@ -163,8 +109,44 @@ void defaultsettings() // the first setting interface to pop out
         } else {
             cout << "Please enter 3/5/7/9 only!!!" << endl << endl;
         }
-        }
-        settings();
+    }
+    return noOfcolumn, noOfrow;
+}
+
+void zombie_settings() 
+{
+    game info;
+    
+    cout << "================================" << endl;
+    cout << "         Zombie Settings" << endl;
+    cout << "================================" << endl;
+
+    cout << "How many Zombie(s)? : ";
+    cin >> zombies;
+}
+
+void default_settings() // display default setting interface
+{
+    game info;
+    game go;
+
+    cout << "================================" << endl;
+    cout << "        " << name_setting << endl;
+    cout << "================================" << endl;
+    cout << "Board Rows      : "<< noOfrow << endl;
+    cout << "Board Columns   : "<< noOfcolumn << endl;
+    cout << "Zombie(s) Count : "<< zombies << endl;
+    cout << "================================" << endl;
+
+    cout << "Change " << name_setting << "? (y/n) : ";
+    cin >> info.yesno;
+
+    if (info.yesno == 'y') { // if input is yes
+        board_settings();
+        zombie_settings();
+        name_setting = "Current Settings";
+
+        default_settings();
     }
     else if (info.yesno == 'n') { // if input is no
         cout << "Launching Game...\n" << endl;
@@ -237,5 +219,5 @@ void game::display() const
 int main()
 {
     startup();
-    defaultsettings();
+    default_settings();
 }
