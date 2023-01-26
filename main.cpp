@@ -82,7 +82,7 @@ void startup() // startup interface
     cout << "\n" << endl;
 }
 
-int board_settings()
+int board_settings() // board size input
 {
     game info;
     
@@ -113,7 +113,7 @@ int board_settings()
     return noOfcolumn, noOfrow;
 }
 
-void zombie_settings() 
+void zombie_settings() // zombie input 
 {
     game info;
     
