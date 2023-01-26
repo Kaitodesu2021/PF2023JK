@@ -30,9 +30,9 @@ class game //column = column , row = row
     public:
         int column, row;
         int x, y, x_, y_;
-        int oddnum_row, oddnum_column;
+        int oddnum_row, oddnum_column, zombie_num;
         char yesno;
-        int row_true = 0, column_true = 0;
+        int row_true = 0, column_true = 0, zombie_true = 0;
         
         game(int column = noOfcolumn , int row = noOfrow);
         void init(int column, int row);
@@ -82,7 +82,7 @@ void startup() // startup interface
     cout << "\n" << endl;
 }
 
-int board_settings() // board size input
+void board_settings() // board size input
 {
     game info;
     
@@ -90,30 +90,29 @@ int board_settings() // board size input
     cout << "         Board Settings" << endl;
     cout << "================================" << endl;
 
-    while (info.row_true < 1) { // checking whether row input is odd (3/5/7/9)
+    while (info.row_true < 1) { // checking whether row input is odd
         cout << "How many row(s)? : ";
         cin >> info.oddnum_row;
-        if (info.oddnum_row == 3 || info.oddnum_row == 5 || info.oddnum_row == 7 || info.oddnum_row == 9) {
+        if (info.oddnum_row % 2 == 1) {
             noOfrow = info.oddnum_row;
             info.row_true = 1;
         } else {
-            cout << "Please enter 3/5/7/9 only!!!" << endl << endl;
+            cout << "Please enter odd numbers only!!!" << endl << endl;
         }
     }
-    while (info.column_true < 1) { // checking whether column input is odd (3/5/7/9)
+    while (info.column_true < 1) { // checking whether column input is odd
         cout << "How many column(s)? : ";
         cin >> info.oddnum_column;
-        if (info.oddnum_column == 3 || info.oddnum_column == 5 || info.oddnum_column == 7 || info.oddnum_column == 9) {
+        if (info.oddnum_column % 2 == 1) {
             noOfcolumn = info.oddnum_column;
             info.column_true = 1;
         } else {
-            cout << "Please enter 3/5/7/9 only!!!" << endl << endl;
+            cout << "Please enter odd numbers only!!!" << endl << endl;
         }
     }
-    return noOfcolumn, noOfrow;
 }
 
-void zombie_settings() // zombie input 
+void zombie_settings() // zombie input
 {
     game info;
     
@@ -121,8 +120,16 @@ void zombie_settings() // zombie input
     cout << "         Zombie Settings" << endl;
     cout << "================================" << endl;
 
-    cout << "How many Zombie(s)? : ";
-    cin >> zombies;
+    while (info.zombie_true < 1) { // checking whether input is between 1-9
+        cout << "How many Zombie(s) (1-9)? : ";
+        cin >> info.zombie_num;
+        if ((0 < info.zombie_num) && (info.zombie_num < 10)) {
+            zombies = info.zombie_num;
+            info.zombie_true = 1;
+        } else {
+            cout << "Please enter betweeen 1-9 only!!!" << endl << endl;
+        }
+    }
 }
 
 void default_settings() // display default setting interface
