@@ -18,21 +18,21 @@
 #include <cstdlib> // for system()
 #include <iomanip> // for setw()
 using namespace std;
-int noOfcolumn = 5 ,noOfrow = 5 ;
 
+int noOfcolumn = 5 ,noOfrow = 5 ;
 
 class game //column = column , row = row
 {
     private:
-        vector< vector<char> > map_; // convention to put trailing underscore
+        vector<vector<char>> map_; // convention to put trailing underscore
         int column_, row_; // to indicate private data
     public:
-
-    
         int column, row;
         int x, y, x_, y_;
         int zombies = 1;
+        int oddnum_row, oddnum_column;
         char yesno;
+        int row_true = 0, column_true = 0;
         
         game(int column = noOfcolumn , int row = noOfrow);
         void init(int column, int row);
@@ -70,7 +70,7 @@ void game::init(int column, int row)
     }
 }
 
-void startup() 
+void startup() // startup interface
 {
     game info;
     cout << "Assignment (Part 1)" << endl;
@@ -82,7 +82,7 @@ void startup()
     cout << "\n" << endl;
 }
 
-void settings()
+void settings() // the second setting interface to pop out and so on
 {
     game info;
     game go;
@@ -98,22 +98,36 @@ void settings()
     cout << "Change Settings? (y/n) : ";
     cin >> info.yesno;
 
-    if (info.yesno == 'y') {
-        cout << "How many row(s)? :" << endl;
-        cin >> noOfrow;
-
-        cout << "How many column(s)? :" << endl;
-        cin >> noOfcolumn;
-
+    if (info.yesno == 'y') { // if input is yes
+        while (info.row_true < 1) { // checking whether row input is odd (3/5/7/9)
+        cout << "How many row(s)? :  ";
+        cin >> info.oddnum_row;
+        if (info.oddnum_row == 3 || info.oddnum_row == 5 || info.oddnum_row == 7 || info.oddnum_row == 9) {
+            noOfrow = info.oddnum_row;
+            info.row_true = 1;
+        } else {
+            cout << "Please enter 3/5/7/9 only!!!" << endl << endl;
+        }
+        }
+        while (info.column_true < 1) { // checking whether column input is odd (3/5/7/9)
+        cout << "How many column(s)? : ";
+        cin >> info.oddnum_column;
+        if (info.oddnum_column == 3 || info.oddnum_column == 5 || info.oddnum_column == 7 || info.oddnum_column == 9) {
+            noOfcolumn = info.oddnum_column;
+            info.column_true = 1;
+        } else {
+            cout << "Please enter 3/5/7/9 only!!!" << endl << endl;
+        }
+        }
         settings();
     }
-    else if (info.yesno == 'n') {
+    else if (info.yesno == 'n') { // if input is no
         cout << "Launching Game...\n" << endl;
         go.game::display();
     }
 }
 
-void defaultsettings()
+void defaultsettings() // the first setting interface to pop out
 {
     game info;
     game go;
@@ -129,16 +143,30 @@ void defaultsettings()
     cout << "Change Settings? (y/n) : ";
     cin >> info.yesno;
 
-    if (info.yesno == 'y') {
-        cout << "How many row(s)? :" << endl;
-        cin >> noOfrow;
-
-        cout << "How many column(s)? :" << endl;
-        cin >> noOfcolumn;
-
+    if (info.yesno == 'y') { // if input is yes
+        while (info.row_true < 1) { // checking whether row input is odd (3/5/7/9)
+        cout << "How many row(s)? : ";
+        cin >> info.oddnum_row;
+        if (info.oddnum_row == 3 || info.oddnum_row == 5 || info.oddnum_row == 7 || info.oddnum_row == 9) {
+            noOfrow = info.oddnum_row;
+            info.row_true = 1;
+        } else {
+            cout << "Please enter 3/5/7/9 only!!!" << endl << endl;
+        }
+        }
+        while (info.column_true < 1) { // checking whether column input is odd (3/5/7/9)
+        cout << "How many column(s)? : ";
+        cin >> info.oddnum_column;
+        if (info.oddnum_column == 3 || info.oddnum_column == 5 || info.oddnum_column == 7 || info.oddnum_column == 9) {
+            noOfcolumn = info.oddnum_column;
+            info.column_true = 1;
+        } else {
+            cout << "Please enter 3/5/7/9 only!!!" << endl << endl;
+        }
+        }
         settings();
     }
-    else if (info.yesno == 'n') {
+    else if (info.yesno == 'n') { // if input is no
         cout << "Launching Game...\n" << endl;
         go.game::display();
     }
@@ -146,24 +174,21 @@ void defaultsettings()
 
 void game::display() const
 {
-    // header
     game info;
-    for (int j = 0; j < column_; ++j)
+    for (int j = 0; j < column_; ++j) // header
     {
         cout << "====";
     }
-    cout << "====" << endl;
+    cout << "========" << endl;
     cout << "> Alien Vs Zombies" << endl;
 
-    // divider
-    for (int j = 0; j < column_; ++j)
+    for (int j = 0; j < column_; ++j) // divider
     {
         cout << "====";
     }
-    cout << "====" << endl;
+    cout << "========" << endl;
 
-    // for each row
-    for (int i = 0; i < row_; ++i)
+    for (int i = 0; i < row_; ++i) // for each row
     {
         // display upper border of the row
         cout << "   ";
@@ -206,13 +231,11 @@ void game::display() const
     {
         cout << "====";
     }
-    cout << "====" << endl;
+    cout << "========" << endl;
 }
 
 int main()
 {
-
     startup();
     defaultsettings();
-    
 }
