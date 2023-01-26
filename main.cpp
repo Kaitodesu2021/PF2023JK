@@ -208,8 +208,21 @@ void game::display() const
     cout << "+" << endl;
 
     // display column number
+    cout << "  "; 
+    for (int j = 0; j < column_; ++j) // first row
+    {
+        int digit = (j + 1) / 10;
+        cout << "   ";
+        if (digit == 0)
+            cout << " ";
+        else
+            cout << digit;
+    }
+
+    cout << endl;
     cout << "  ";
-    for (int j = 0; j < column_; ++j)
+    
+    for (int j = 0; j < column_; ++j) // second row
     {
         cout << "   " << (j + 1) % 10;
     }
