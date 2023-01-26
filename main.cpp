@@ -169,7 +169,7 @@ void game::display() const
         cout << "====";
     }
     cout << "========" << endl;
-    cout << "> Alien Vs Zombies" << endl;
+    cout << ">      Alien Vs Zombies" << endl;
 
     for (int j = 0; j < column_; ++j) // divider
     {
