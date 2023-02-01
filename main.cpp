@@ -15,8 +15,8 @@
 #include <thread>
 #include <string>
 #include <vector>
-#include <cstdlib> // for system()
-#include <iomanip> // for setw()
+#include <cstdlib> 
+#include <iomanip> 
 using namespace std;
 
 int noOfcolumn = 5 ,noOfrow = 5 , zombies = 1;
@@ -25,8 +25,8 @@ string name_setting = "Default Settings", title_spaces = "";
 class game //column = column , row = row
 {
     private:
-        vector<vector<char>> map_; // convention to put trailing underscore
-        int column_, row_; // to indicate private data
+        vector<vector<char>> map_; 
+        int column_, row_; 
     public:
         int column, row;
         int x, y, x_, y_;
@@ -49,14 +49,14 @@ void game::init(int column, int row)
     column_ = column;
     row_ = row;
 
-    char objects[] = { '^', 'v', '>', '<', 'h', 'p', 'r', ' ', ' ', ' '};
+    char objects[] = { '^', 'v', '>', '<', 'h', 'p', 'r', ' ', ' ', ' '}; //objects
     int noOfObjects = 10; // number of objects in the objects array
 
     // create dynamic 2D array using vector
-    map_.resize(row_); // create empty rows
+    map_.resize(row_); // to create empty rows
     for (int i = 0; i < row_; ++i)
     {
-        map_[i].resize(column_); // resize each row
+        map_[i].resize(column_); // we resize each row
     }
 
     // put random characters into the vector array
@@ -98,7 +98,7 @@ void board_settings() // board size input
             info.row_true = 1;
         }
          else {
-            cout << "Please enter odd numbers only (minimum 3)!!!" << endl << endl;
+            cout << "Please enter odd numbers only (minimum 3)!!!" << endl << endl; // if user input is even number
         }
     }
     while (info.column_true < 1) { // checking whether column input is odd
@@ -108,7 +108,7 @@ void board_settings() // board size input
             noOfcolumn = info.oddnum_column;
             info.column_true = 1;
         } else {
-            cout << "Please enter odd numbers only (minimum 3)!!!" << endl << endl;
+            cout << "Please enter odd numbers only (minimum 3)!!!" << endl << endl; // if user input is even number
         }
     }
 }
@@ -128,7 +128,7 @@ void zombie_settings() // zombie input
             zombies = info.zombie_num;
             info.zombie_true = 1;
         } else {
-            cout << "Please enter betweeen 1-9 only!!!" << endl << endl;
+            cout << "Please enter betweeen 1-9 only!!!" << endl << endl; //range for number of zombies
         }
     }
 }
