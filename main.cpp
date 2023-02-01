@@ -2,7 +2,7 @@
 // Course: TCP1101 PROGRAMMING FUNDAMENTALS 
 // Year: Trimester 1, 2022/23 (T2215) 
 // Lab: TT5L 
-// Names: MEMBER_NAME_1 | FARID | 
+// Names: ALIF | FARID | 
 // IDs: 1211103373 | 1211103085 | 
 // Emails: 1211103373@student.mmu.edu.my | 1211103085@student.mmu.edu.my | 
 // Phones: 0174622108 | 01120975650 | 
@@ -59,7 +59,7 @@ void game::init(int column, int row)
         map_[i].resize(column_); // we resize each row
     }
 
-    // put random characters into the vector array
+    // put random characters in the board
     for (int i = 0; i < row_; ++i)
     {
         for (int j = 0; j < column_; ++j)
