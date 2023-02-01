@@ -4,11 +4,7 @@
 
 Please provide the YouTube link to your [Video Demo](https://youtube.com).
 
-## Minimum Requirements
-
 ### Completed
-
-List all the features completed.
 
 1. Display Default Settings
 2. Allow users to change default settings as many times
@@ -20,8 +16,6 @@ List all the features completed.
 8. Randomize object spawned on board
 
 ### To Do
-
-List all the features not yet done. Remove this section if there is no incomplete requirements.
 
 1. Alien features
 2. Zombie attack and movement features
@@ -38,16 +32,12 @@ No additional features yet.
 
 ## Contributions
 
-List down the contribution of each group members.
-
-For example:
-
 ### Alif
 
 1. Created github repository
-3. Manage to display board dimension from users input
-4. Manage to display row, column, and zombie numbers from users input
-5. Created the algorithm for randomizing object spawned on board
+2. Manage to display board dimension from users input
+3. Manage to display row, column, and zombie numbers from users input
+4. Created the algorithm for randomizing object spawned on board
 5. Manage to display row numbers on the board
 6. Record and upload video demo to Youtube
 ### Farid
@@ -60,7 +50,6 @@ For example:
 6. Manage to display column numbers on the board
 
 ## Problems Encountered & Solutions
-Describe the problems encountered and provide the solutions / plan for the solutions.
 
 ## Current Problem Encountered and plan for solution
 
