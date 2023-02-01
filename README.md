@@ -1,6 +1,8 @@
 # Alien vs. Zombie
 
-Please introduce the game here.
+Alien vs Zombies is a game where it combines puzzle, path-planning and strategy into the mix to bring unique gameplay experience. Players must eliminate the zombies by cleverly 
+navigating the aliens on a path to destroy the zombies before the zombies destroyed the players. Players will face other object that could aid or hinder the player such as pod, 
+health and rock. Every move counts, and only with correct strategizing and moves will only the player be able to beat all the zombies and claim victory.
 
 You may add one signature screenshot of your program here or above the title. Check out [this tutorial](https://www.digitalocean.com/community/tutorials/markdown-markdown-images) to learn how to do it.
 
@@ -31,8 +33,5 @@ Please DO NOT change the Progress Log below. Leave it as it is.
 
 Please replace the following with your group members' names. 
 
-- Tony Stark
-- Steve Rogers
-- Dr. Strange
-
-
+- Alif
+- Farid
