@@ -2,10 +2,10 @@
 // Course: TCP1101 PROGRAMMING FUNDAMENTALS 
 // Year: Trimester 1, 2022/23 (T2215) 
 // Lab: TT5L 
-// Names: MEMBER_NAME_1 | MEMBER_NAME_2 | 
-// IDs: 1211103373 | MEMBER_ID_2 | 
-// Emails: 1211103373@student.mmu.edu.my | MEMBER_EMAIL_2 | 
-// Phones: 0174622108 | MEMBER_PHONE_2 | 
+// Names: MEMBER_NAME_1 | FARID | 
+// IDs: 1211103373 | 1211103085 | 
+// Emails: 1211103373@student.mmu.edu.my | 1211103085@student.mmu.edu.my | 
+// Phones: 0174622108 | 01120975650 | 
 // ********************************************************* 
 
 #include "pf/helper.h"
@@ -20,7 +20,7 @@
 using namespace std;
 
 int noOfcolumn = 5 ,noOfrow = 5 , zombies = 1;
-string name_setting = "Default Settings";
+string name_setting = "Default Settings", title_spaces = "";
 
 class game //column = column , row = row
 {
@@ -91,23 +91,24 @@ void board_settings() // board size input
     cout << "================================" << endl;
 
     while (info.row_true < 1) { // checking whether row input is odd
-        cout << "How many row(s)? : ";
+        cout << "How many row(s) (min. 3)? : ";
         cin >> info.oddnum_row;
-        if (info.oddnum_row % 2 == 1) {
+        if ((info.oddnum_row % 2 == 1) && (info.oddnum_row >= 3) && (info.oddnum_row <= 21)) {
             noOfrow = info.oddnum_row;
             info.row_true = 1;
-        } else {
-            cout << "Please enter odd numbers only!!!" << endl << endl;
+        }
+         else {
+            cout << "Please enter odd numbers only (minimum 3)!!!" << endl << endl;
         }
     }
     while (info.column_true < 1) { // checking whether column input is odd
-        cout << "How many column(s)? : ";
+        cout << "How many column(s)? (min. 3): ";
         cin >> info.oddnum_column;
-        if (info.oddnum_column % 2 == 1) {
+        if ((info.oddnum_column % 2 == 1) && (info.oddnum_column >= 3) && (info.oddnum_column <= 21)) {
             noOfcolumn = info.oddnum_column;
             info.column_true = 1;
         } else {
-            cout << "Please enter odd numbers only!!!" << endl << endl;
+            cout << "Please enter odd numbers only (minimum 3)!!!" << endl << endl;
         }
     }
 }
@@ -169,7 +170,8 @@ void game::display() const
         cout << "====";
     }
     cout << "========" << endl;
-    cout << ">      Alien Vs Zombies" << endl;
+    
+    cout << "  Alien Vs Zombies" << endl;
 
     for (int j = 0; j < column_; ++j) // divider
     {
@@ -208,6 +210,7 @@ void game::display() const
     cout << "+" << endl;
 
     // display column number
+    if (noOfcolumn > 9) { // changing spacing when column > 9
     cout << "  "; 
     for (int j = 0; j < column_; ++j) // first row
     {
@@ -218,15 +221,22 @@ void game::display() const
         else
             cout << digit;
     }
-
     cout << endl;
     cout << "  ";
-    
     for (int j = 0; j < column_; ++j) // second row
     {
         cout << "   " << (j + 1) % 10;
     }
     cout << endl;
+    }
+    else { // when column < 9
+    cout << "  ";
+    for (int j = 0; j < column_; ++j) // first row 
+    {
+        cout << "   " << (j + 1) % 10;
+    }
+    cout << endl;
+    }
 
     // divider
     for (int j = 0; j < column_; ++j)
