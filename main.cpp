@@ -20,10 +20,10 @@
 #include <iomanip> 
 using namespace std;
 
-int noOfcolumn = 5 ,noOfrow = 5 , zombies = 1;
+int noOfcolumn = 5 ,noOfrow = 5 , zombies = 1, action;
 string name_setting = "Default Settings", title_spaces = "";
 
-class game //column = column , row = row
+class Game //column = column , row = row
 {
     private:
         vector<vector<char>> map_; 
@@ -33,19 +33,22 @@ class game //column = column , row = row
         int x, y, x_, y_;
         int oddnum_row, oddnum_column, zombie_num;
         char yesno;
+        int action_input;
         int row_true = 0, column_true = 0, zombie_true = 0;
         
-        game(int column = noOfcolumn , int row = noOfrow);
+        Game(int column = noOfcolumn , int row = noOfrow);
         void init(int column, int row);
-        void display() const;
+        void startup() const, default_settings() const, board_settings() const, zombie_settings() const;
+        void display() const, divider() const;
+        void action() const;
 };
 
-game::game(int column, int row)
+Game::Game(int column, int row)
 {
     init(column, row); 
 }
 
-void game::init(int column, int row)
+void Game::init(int column, int row)
 {
     column_ = column;
     row_ = row;
@@ -73,9 +76,31 @@ void game::init(int column, int row)
     }
 }
 
-void startup() // startup interface
+class Alien
 {
-    game info;
+    private:
+        int x_, y_G;
+        char heading_; //either '^', '>', '<', 'v'
+    public:
+        Alien();
+        void land(Game &game);
+        int getX() const;
+        int getY() const;
+        char getHeading() const;
+};
+
+Alien::Alien()
+{    
+}
+
+void Alien::land(Game &game)
+{
+
+}
+
+void Game::startup() const // startup interface
+{
+    Game info;
     cout << "Assignment (Part 1)" << endl;
     cout << "===================" << endl;
     cout << "Launching Alien VS Zombies...\n" << endl;
@@ -85,9 +110,9 @@ void startup() // startup interface
     cout << "\n" << endl;
 }
 
-void board_settings() // board size input
+void Game::board_settings() const // board size input
 {
-    game info;
+    Game info;
     
     cout << "================================" << endl;
     cout << "         Board Settings" << endl;
@@ -116,9 +141,9 @@ void board_settings() // board size input
     }
 }
 
-void zombie_settings() // zombie input
+void Game::zombie_settings() const // zombie input
 {
-    game info;
+    Game info;
     
     cout << "================================" << endl;
     cout << "         Zombie Settings" << endl;
@@ -136,10 +161,9 @@ void zombie_settings() // zombie input
     }
 }
 
-void default_settings() // display default setting interface
+void Game::default_settings() const // display default setting interface
 {
-    game info;
-    game go;
+    Game info;
 
     cout << "================================" << endl;
     cout << "        " << name_setting << endl;
@@ -153,26 +177,48 @@ void default_settings() // display default setting interface
     cin >> info.yesno;
 
     if (info.yesno == 'y') { // if input is yes
-        board_settings();
-        zombie_settings();
+        Game::board_settings();
+        Game::zombie_settings();
         name_setting = "Current Settings";
 
-        default_settings();
+        Game::default_settings();
     }
     else if (info.yesno == 'n') { // if input is no
         cout << "Launching Game...\n" << endl;
-        go.game::display();
+        info.Game::display();
     }
 }
 
-void alien()
+void Game::divider() const
 {
-
+    for (int j = 0; j < column_; ++j)
+    {
+        cout << "====";
+    }
+    cout << "========" << endl;
 }
 
-void game::display() const
+void Game::action() const //asking player to pick action
 {
-    game info;
+    int action_input;
+
+    cout << "1. Move Alien\n";
+    cout << "2. Change arrow direction\n" << endl;
+    cout << "Which do you want to move? : ";
+    cin >> action_input;
+
+    if (action_input == 1) {
+        cout << ">>> Alien is moving\n";
+    }
+    else if (action_input == 2) {
+        cout << ">>> Arrow is changing\n";
+    }
+    Game::divider();
+}
+
+void Game::display() const
+{
+    Game info;
     for (int j = 0; j < column_; ++j) // header
     {
         cout << "====";
@@ -262,11 +308,15 @@ void game::display() const
         cout << "====";
     }
     cout << "========" << endl;
+
+    Game::action(); //go to action tab
 }
 
 int main()
 {
     srand(time(NULL));
-    startup();
-    default_settings();
+
+    Game game;
+    game.startup();
+    game.default_settings();
 }
