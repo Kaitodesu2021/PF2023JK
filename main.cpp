@@ -8,7 +8,6 @@
 // Phones: 0174622108 | 01120975650 | 
 // ********************************************************* 
 
-#include "pf/helper.h"
 #include <iostream>
 #include <dos.h>
 #include <chrono>
@@ -16,6 +15,8 @@
 #include <string>
 #include <vector>
 #include <cstdlib> 
+#include <ctime> 
+#include <cmath>
 #include <iomanip> 
 using namespace std;
 
@@ -49,7 +50,9 @@ void game::init(int column, int row)
     column_ = column;
     row_ = row;
 
-    char objects[] = { '^', 'v', '>', '<', 'h', 'p', 'r', ' ', ' ', ' '}; //objects
+    char objects[] = {'^', 'v', '>', '<', 'h', 'p', 'r', ' ', ' ', ' '}; //objects
+    char alien_[] = {"A"};
+
     int noOfObjects = 10; // number of objects in the objects array
 
     // create dynamic 2D array using vector
@@ -59,7 +62,7 @@ void game::init(int column, int row)
         map_[i].resize(column_); // we resize each row
     }
 
-    // put random characters in the board
+    // put random characters into dimensional vector array
     for (int i = 0; i < row_; ++i)
     {
         for (int j = 0; j < column_; ++j)
@@ -93,22 +96,22 @@ void board_settings() // board size input
     while (info.row_true < 1) { // checking whether row input is odd
         cout << "How many row(s) (min. 3)? : ";
         cin >> info.oddnum_row;
-        if ((info.oddnum_row % 2 == 1) && (info.oddnum_row >= 3) && (info.oddnum_row <= 21)) {
+        if ((info.oddnum_row % 2 == 1) && (info.oddnum_row >= 3) && (info.oddnum_row <= 13)) {
             noOfrow = info.oddnum_row;
             info.row_true = 1;
         }
          else {
-            cout << "Please enter odd numbers only (minimum 3)!!!" << endl << endl; // if user input is even number
+            cout << "Please enter odd numbers only (min 3/max 13)!!!" << endl << endl; // if user input is even number
         }
     }
     while (info.column_true < 1) { // checking whether column input is odd
         cout << "How many column(s)? (min. 3): ";
         cin >> info.oddnum_column;
-        if ((info.oddnum_column % 2 == 1) && (info.oddnum_column >= 3) && (info.oddnum_column <= 21)) {
+        if ((info.oddnum_column % 2 == 1) && (info.oddnum_column >= 3) && (info.oddnum_column <= 13)) {
             noOfcolumn = info.oddnum_column;
             info.column_true = 1;
         } else {
-            cout << "Please enter odd numbers only (minimum 3)!!!" << endl << endl; // if user input is even number
+            cout << "Please enter odd numbers only (min 3/max 13)!!!" << endl << endl; // if user input is even number
         }
     }
 }
@@ -162,6 +165,11 @@ void default_settings() // display default setting interface
     }
 }
 
+void alien()
+{
+
+}
+
 void game::display() const
 {
     game info;
@@ -194,9 +202,19 @@ void game::display() const
 
         // display cell content and border of each column
         cout << "";
+
+        int midrow = noOfrow / 2;
+        int midcolumn = noOfcolumn / 2;
+
         for (int j = 0; j < column_; ++j)
         {
-            cout << " | " << map_[i][j];
+            cout << " | ";
+            if ((i == midrow) && (j == midcolumn)) { // alien spawnpoint
+                cout << "A";
+            }
+            else {
+                cout << map_[i][j]; // other objects
+            }  
         }
         cout << " |" << endl;
     }
@@ -248,6 +266,7 @@ void game::display() const
 
 int main()
 {
+    srand(time(NULL));
     startup();
     default_settings();
 }
