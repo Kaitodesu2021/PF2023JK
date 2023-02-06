@@ -79,7 +79,7 @@ void Game::init(int column, int row)
 class Alien
 {
     private:
-        int x_, y_G;
+        int x_, y_;
         char heading_; //either '^', '>', '<', 'v'
     public:
         Alien();
