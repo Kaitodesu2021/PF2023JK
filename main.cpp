@@ -17,6 +17,7 @@
 #include <cstdlib> 
 #include <ctime> 
 #include <cmath>
+#include<bits/stdc++.h>
 #include <iomanip> 
 using namespace std;
 
@@ -39,6 +40,8 @@ class Game //column = column , row = row
         Game(int column = noOfcolumn , int row = noOfrow);
         void init(int column, int row);
         void startup() const, default_settings() const, board_settings() const, zombie_settings() const;
+        void mergeArrays(int objects[], int zombies_array[], int noOfobjects, int zombies, int new_objects[]);
+        void zombie() const;
         void display() const, divider() const;
         void action() const;
 };
@@ -54,7 +57,7 @@ void Game::init(int column, int row)
     row_ = row;
 
     char objects[] = {'^', 'v', '>', '<', 'h', 'p', 'r', ' ', ' ', ' '}; //objects
-    char alien_[] = {"A"};
+    char zombies_array[] = {'1'}; //zombies
 
     int noOfObjects = 10; // number of objects in the objects array
 
@@ -161,6 +164,11 @@ void Game::zombie_settings() const // zombie input
     }
 }
 
+void Game::zombie() const
+{
+    
+}
+
 void Game::default_settings() const // display default setting interface
 {
     Game info;
@@ -187,6 +195,23 @@ void Game::default_settings() const // display default setting interface
         cout << "Launching Game...\n" << endl;
         info.Game::display();
     }
+}
+
+void Game::mergeArrays(int objects[], int zombies_array[], int noOfobjects, int zombies, int new_objects[])
+{
+    int i = 0, j = 0, k = 0;
+      // traverse the arr1 and insert its element in arr3
+      while(i < noOfobjects){
+      new_objects[k++] = objects[i++];
+    }
+        
+      // now traverse arr2 and insert in arr3
+      while(j < zombies){
+      new_objects[k++] = zombies_array[j++];
+    }
+        
+      // sort the whole array arr3
+      sort(new_objects, new_objects + noOfobjects + zombies);
 }
 
 void Game::divider() const
@@ -219,19 +244,10 @@ void Game::action() const //asking player to pick action
 void Game::display() const
 {
     Game info;
-    for (int j = 0; j < column_; ++j) // header
-    {
-        cout << "====";
-    }
-    cout << "========" << endl;
-    
-    cout << "  Alien Vs Zombies" << endl;
 
-    for (int j = 0; j < column_; ++j) // divider
-    {
-        cout << "====";
-    }
-    cout << "========" << endl;
+    Game::divider();
+    cout << "  Alien Vs Zombies" << endl;
+    Game::divider();
 
     for (int i = 0; i < row_; ++i) // for each row
     {
@@ -302,12 +318,7 @@ void Game::display() const
     cout << endl;
     }
 
-    // divider
-    for (int j = 0; j < column_; ++j)
-    {
-        cout << "====";
-    }
-    cout << "========" << endl;
+    Game::divider();
 
     Game::action(); //go to action tab
 }
