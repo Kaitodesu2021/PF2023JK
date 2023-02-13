@@ -325,7 +325,7 @@ void Game::display() const
 
 int main()
 {
-    srand(time(NULL));
+    // srand(time(NULL));
 
     Game game;
     game.startup();
