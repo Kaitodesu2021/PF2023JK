@@ -28,8 +28,9 @@ class Game //column = column , row = row
 {
     private:
         vector<vector<char>> map_; 
-        int column_, row_; 
+        int column_, row_;
     public:
+        int x_axis, y_axis;
         int column, row;
         int x, y, x_, y_;
         int oddnum_row, oddnum_column, zombie_num;
@@ -40,10 +41,10 @@ class Game //column = column , row = row
         Game(int column = noOfcolumn , int row = noOfrow);
         void init(int column, int row);
         void startup() const, default_settings() const, board_settings() const, zombie_settings() const;
-        void mergeArrays(int objects[], int zombies_array[], int noOfobjects, int zombies, int new_objects[]);
         void zombie() const;
         void display() const, divider() const;
         void action() const;
+        void move_alien(char direction);
 };
 
 Game::Game(int column, int row)
@@ -77,28 +78,10 @@ void Game::init(int column, int row)
             map_[i][j] = objects[objNo];
         }
     }
-}
 
-class Alien
-{
-    private:
-        int x_, y_;
-        char heading_; //either '^', '>', '<', 'v'
-    public:
-        Alien();
-        void land(Game &game);
-        int getX() const;
-        int getY() const;
-        char getHeading() const;
-};
-
-Alien::Alien()
-{    
-}
-
-void Alien::land(Game &game)
-{
-
+    x_axis = column_ / 2;
+    y_axis = row_ / 2;
+    map_[y_axis][x_axis] = 'A';
 }
 
 void Game::startup() const // startup interface
@@ -144,6 +127,40 @@ void Game::board_settings() const // board size input
     }
 }
 
+void Game::move_alien(char direction) 
+{
+    Game game;
+    map_[y_axis][x_axis] = '.'; // change the original coordinates to '.'
+
+    if ((direction == 'w') && (y_axis > 0)) {
+        while (y_axis > 0)
+        {
+        y_axis--; //go up
+        }
+    }
+    else if ((direction == 's') && (y_axis < noOfcolumn - 1)) {
+        while (y_axis < noOfcolumn - 1) {
+        y_axis++; //go down
+        }
+    }
+    else if ((direction == 'a') && (x_axis > 0)) {
+        while (x_axis > 0) {
+        x_axis--; //go left
+        }
+    }
+    else if ((direction == 'd') && (x_axis < noOfrow - 1)) {
+        while (x_axis < noOfrow - 1) {
+        x_axis++; //go right
+        }
+    }
+    else {
+        cout << "Please enter accepted input only!!! (w/a/s/d)" << endl;
+        game.display();
+    }
+
+    map_[y_axis][x_axis] = 'A';
+}
+
 void Game::zombie_settings() const // zombie input
 {
     Game info;
@@ -162,11 +179,6 @@ void Game::zombie_settings() const // zombie input
             cout << "Please enter betweeen 1-9 only!!!" << endl << endl; //range for number of zombies
         }
     }
-}
-
-void Game::zombie() const
-{
-    
 }
 
 void Game::default_settings() const // display default setting interface
@@ -197,23 +209,6 @@ void Game::default_settings() const // display default setting interface
     }
 }
 
-void Game::mergeArrays(int objects[], int zombies_array[], int noOfobjects, int zombies, int new_objects[])
-{
-    int i = 0, j = 0, k = 0;
-      // traverse the arr1 and insert its element in arr3
-      while(i < noOfobjects){
-      new_objects[k++] = objects[i++];
-    }
-        
-      // now traverse arr2 and insert in arr3
-      while(j < zombies){
-      new_objects[k++] = zombies_array[j++];
-    }
-        
-      // sort the whole array arr3
-      sort(new_objects, new_objects + noOfobjects + zombies);
-}
-
 void Game::divider() const
 {
     for (int j = 0; j < column_; ++j)
@@ -225,20 +220,36 @@ void Game::divider() const
 
 void Game::action() const //asking player to pick action
 {
-    int action_input;
-
-    cout << "1. Move Alien\n";
-    cout << "2. Change arrow direction\n" << endl;
-    cout << "Which do you want to move? : ";
-    cin >> action_input;
-
-    if (action_input == 1) {
-        cout << ">>> Alien is moving\n";
-    }
-    else if (action_input == 2) {
-        cout << ">>> Arrow is changing\n";
-    }
+    Game game;
+    char direction;
+    int choices;
+    cout << "1. Move Alien" << endl;
+    cout << "2. Move Arrow" << endl;
+    cout << "3. Exit Game" << endl;
+    cout << "Pick action: ";
+    cin >> choices;
     Game::divider();
+
+    if (choices == 1) {
+        cout << "Enter direction (w, a, s, d): ";
+        cin >> direction;
+        cout << endl;
+        game.move_alien(direction);
+        game.display();
+    }
+    else if (choices == 2) {
+        cout << "Not Updated for option 2\n";
+        Game::divider();
+        Game::action();
+    }
+    else if (choices == 3){
+        cout << "Exiting game...\n";
+        exit(0);
+        Game::divider();
+    }
+    else {
+        cout << "Not Updated\n";
+    }
 }
 
 void Game::display() const
@@ -271,12 +282,12 @@ void Game::display() const
         for (int j = 0; j < column_; ++j)
         {
             cout << " | ";
-            if ((i == midrow) && (j == midcolumn)) { // alien spawnpoint
-                cout << "A";
-            }
-            else {
-                cout << map_[i][j]; // other objects
-            }  
+            // if ((i == midrow) && (j == midcolumn)) { // alien spawnpoint
+            //     cout << "A";
+            // }
+            // else {
+            cout << map_[i][j]; // other objects
+            // }  
         }
         cout << " |" << endl;
     }
@@ -325,7 +336,7 @@ void Game::display() const
 
 int main()
 {
-    // srand(time(NULL));
+    srand(time(NULL));
 
     Game game;
     game.startup();
