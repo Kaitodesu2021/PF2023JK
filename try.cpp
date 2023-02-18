@@ -20,7 +20,6 @@ class Game //column = column , row = row
         vector<vector<char>> map_; 
         int column, row; 
     public:
-     
         int column_, row_;
         int x, y, x_, y_;
         int oddnum_row, oddnum_column, zombie_num;
@@ -40,9 +39,10 @@ class Game //column = column , row = row
 class Alien
 {
     private:
+        vector<vector<char>> map2; 
         int x_, y_;
-        char heading_; //either '^', '>', '<', 'v'
     public:
+        char heading_; //either '^', '>', '<', 'v'
         Alien();
         void land(Game &game);
         void moveUp(Game &game);
@@ -60,45 +60,46 @@ Alien::Alien()
 
 void Alien::land(Game &game)
 {
+    Alien info;
     x_ = game.row_ / 2;
     y_ = game.column_ / 2;
-    heading_ = '^';
-    game.map_[x_][y_] = heading_;
+    info.heading_ = '^';
+    map2[x_][y_] = heading_;
 }
 
 void Alien::moveUp(Game &game)
 {
     if (x_ > 0) {
-        game.map_[x_][y_] = ' ';
+        map2[x_][y_] = ' ';
         x_--;
-        game.map_[x_][y_] = heading_;
+        map2[x_][y_] = heading_;
     }
 }
 
 void Alien::moveDown(Game &game)
 {
     if (x_ < game.row_ - 1) {
-        game.map_[x_][y_] = ' ';
+        map2[x_][y_] = ' ';
         x_++;
-        game.map_[x_][y_] = heading_;
+        map2[x_][y_] = heading_;
     }
 }
 
 void Alien::moveLeft(Game &game)
 {
     if (y_ > 0) {
-        game.map_[x_][y_] = ' ';
+        map2[x_][y_] = ' ';
         y_--;
-        game.map_[x_][y_] = heading_;
+        map2[x_][y_] = heading_;
     }
 }
 
 void Alien::moveRight(Game &game)
 {
     if (y_ < game.column_ - 1) {
-        game.map_[x_][y_] = ' ';
+        map2[x_][y_] = ' ';
         y_++;
-        game.map_[x_][y_] = heading_;
+        map2[x_][y_] = heading_;
     }
 }
 
