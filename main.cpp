@@ -130,29 +130,43 @@ void Game::board_settings() const // board size input
 void Game::move_alien(char direction) 
 {
     Game game;
-    map_[y_axis][x_axis] = '.'; // change the original coordinates to '.'
 
     if ((direction == 'w') && (y_axis > 0)) {
-        while (y_axis > 0)
-        {
+        while (y_axis > 0) {
+        map_[y_axis][x_axis] = '.'; // leaving trails
         y_axis--; //go up
         }
     }
     else if ((direction == 's') && (y_axis < noOfcolumn - 1)) {
+<<<<<<< HEAD
         while (y_axis < noOfcolumn - 1) 
         {
+=======
+        while (y_axis < noOfcolumn - 1) {
+        map_[y_axis][x_axis] = '.';
+>>>>>>> 84177fb9c9125f34a24564cf8b16c5ef90f4bd83
         y_axis++; //go down
         }
     }
     else if ((direction == 'a') && (x_axis > 0)) {
+<<<<<<< HEAD
         while (x_axis > 0) 
         {
+=======
+        while (x_axis > 0) {
+        map_[y_axis][x_axis] = '.';
+>>>>>>> 84177fb9c9125f34a24564cf8b16c5ef90f4bd83
         x_axis--; //go left
         }
     }
     else if ((direction == 'd') && (x_axis < noOfrow - 1)) {
+<<<<<<< HEAD
         while (x_axis < noOfrow - 1) 
         {
+=======
+        while (x_axis < noOfrow - 1) {
+        map_[y_axis][x_axis] = '.';    
+>>>>>>> 84177fb9c9125f34a24564cf8b16c5ef90f4bd83
         x_axis++; //go right
         }
     }
@@ -260,7 +274,11 @@ void Game::display() const
     Game info;
 
     Game::divider();
-    cout << "  Alien Vs Zombies" << endl;
+    int spacevalue = ((column_ - 3) / 2) * 4 + 2; // 2
+    for (int i = 0; i < spacevalue; i++) {
+        cout << " ";
+    }
+    cout << "Alien Vs Zombies" << endl;
     Game::divider();
 
     for (int i = 0; i < row_; ++i) // for each row
@@ -285,12 +303,7 @@ void Game::display() const
         for (int j = 0; j < column_; ++j)
         {
             cout << " | ";
-            // if ((i == midrow) && (j == midcolumn)) { // alien spawnpoint
-            //     cout << "A";
-            // }
-            // else {
             cout << map_[i][j]; // other objects
-            // }  
         }
         cout << " |" << endl;
     }
@@ -333,7 +346,6 @@ void Game::display() const
     }
 
     Game::divider();
-
     Game::action(); //go to action tab
 }
 
