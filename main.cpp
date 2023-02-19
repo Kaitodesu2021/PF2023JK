@@ -24,7 +24,7 @@ using namespace std;
 int noOfcolumn = 5 ,noOfrow = 5 , zombies = 1, action;
 string name_setting = "Default Settings", title_spaces = "";
 
-class Game //column = column , row = row
+class Game
 {
     private:
         vector<vector<char>> map_; 
@@ -58,8 +58,6 @@ void Game::init(int column, int row)
     row_ = row;
 
     char objects[] = {'^', 'v', '>', '<', 'h', 'p', 'r', ' ', ' ', ' '}; //objects
-    char zombies_array[] = {'1'}; //zombies
-
     int noOfObjects = 10; // number of objects in the objects array
 
     // create dynamic 2D array using vector
@@ -139,19 +137,19 @@ void Game::move_alien(char direction)
     }
     else if ((direction == 's') && (y_axis < noOfcolumn - 1)) {
         while (y_axis < noOfcolumn - 1) {
-        map_[y_axis][x_axis] = '.';
+        map_[y_axis][x_axis] = '.'; // leaving trails
         y_axis++; //go down
         }
     }
     else if ((direction == 'a') && (x_axis > 0)) {
         while (x_axis > 0) {
-        map_[y_axis][x_axis] = '.';
+        map_[y_axis][x_axis] = '.'; // leaving trails
         x_axis--; //go left
         }
     }
     else if ((direction == 'd') && (x_axis < noOfrow - 1)) {
         while (x_axis < noOfrow - 1) {
-        map_[y_axis][x_axis] = '.';    
+        map_[y_axis][x_axis] = '.'; // leaving trails    
         x_axis++; //go right
         }
     }
@@ -159,7 +157,6 @@ void Game::move_alien(char direction)
         cout << "Please enter accepted input only!!! (w/a/s/d)" << endl;
         game.display();
     }
-
     map_[y_axis][x_axis] = 'A';
 }
 
@@ -288,9 +285,6 @@ void Game::display() const
 
         // display cell content and border of each column
         cout << "";
-
-        int midrow = noOfrow / 2;
-        int midcolumn = noOfcolumn / 2;
 
         for (int j = 0; j < column_; ++j)
         {
