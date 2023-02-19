@@ -131,42 +131,35 @@ void Game::move_alien(char direction)
 {
     Game game;
 
-    if ((direction == 'w') && (y_axis > 0)) {
-        while (y_axis > 0) {
+    if ((direction == 'w') && (y_axis > 0)) 
+    {
+        while (y_axis > 0) 
+        {
         map_[y_axis][x_axis] = '.'; // leaving trails
         y_axis--; //go up
         }
     }
-    else if ((direction == 's') && (y_axis < noOfcolumn - 1)) {
-<<<<<<< HEAD
-        while (y_axis < noOfcolumn - 1) 
+    else if ((direction == 's') && (y_axis < noOfcolumn - 1)) 
+    {
+        while (y_axis < noOfcolumn - 1) \
         {
-=======
-        while (y_axis < noOfcolumn - 1) {
         map_[y_axis][x_axis] = '.';
->>>>>>> 84177fb9c9125f34a24564cf8b16c5ef90f4bd83
         y_axis++; //go down
         }
     }
-    else if ((direction == 'a') && (x_axis > 0)) {
-<<<<<<< HEAD
+    else if ((direction == 'a') && (x_axis > 0)) 
+    {
         while (x_axis > 0) 
         {
-=======
-        while (x_axis > 0) {
         map_[y_axis][x_axis] = '.';
->>>>>>> 84177fb9c9125f34a24564cf8b16c5ef90f4bd83
         x_axis--; //go left
         }
     }
-    else if ((direction == 'd') && (x_axis < noOfrow - 1)) {
-<<<<<<< HEAD
+    else if ((direction == 'd') && (x_axis < noOfrow - 1)) 
+    {
         while (x_axis < noOfrow - 1) 
         {
-=======
-        while (x_axis < noOfrow - 1) {
         map_[y_axis][x_axis] = '.';    
->>>>>>> 84177fb9c9125f34a24564cf8b16c5ef90f4bd83
         x_axis++; //go right
         }
     }

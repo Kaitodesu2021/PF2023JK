@@ -1,1302 +1,413 @@
+// ********************************************************* 
+// Course: TCP1101 PROGRAMMING FUNDAMENTALS 
+// Year: Trimester 1, 2022/23 (T2215) 
+// Lab: TT5L 
+// Names: ALIF | FARID | 
+// IDs: 1211103373 | 1211103085 | 
+// Emails: 1211103373@student.mmu.edu.my | 1211103085@student.mmu.edu.my | 
+// Phones: 0174622108 | 01120975650 | 
+// ********************************************************* 
+
 #include <iostream>
+#include <dos.h>
+#include <chrono>
+#include <thread>
 #include <string>
 #include <vector>
-#include <cstdlib> // for system()
-#include <ctime>   // for time() in srand( time(NULL) );
-#include <iomanip> // for setw()
-#include <conio.h> //for press any key
-#include <stdlib.h>
-#include <fstream>
-#include <utility>
+#include <cstdlib> 
+#include <ctime> 
+#include <cmath>
+#include<bits/stdc++.h>
+#include <iomanip> 
 using namespace std;
 
-class AVZ
+int noOfcolumn = 5 ,noOfrow = 5 , zombies = 1, action;
+string name_setting = "Default Settings", title_spaces = "";
+
+class Game //column = column , row = row
 {
-private:
-    vector<vector<char>> map_; // convention to put trailing underscore
-    int numX_, numY_;
-    int currentX_, currentY_; // to indicate private data
-
-public:
-    AVZ(int rows = 5, int col = 15, int zombie = 2); // constructor with number of rows and columns
-    void initArray();                                // function to intialize the array
-    void displayArray() const;                       // function to display the array
-    void displaySettings() const;                    // to display default game settings
-    void insertRandomCharacter(char ch);
-    int getDimX() const;
-    int getDimY() const;
-    void setRows(int rows);
-    void setCol(int col);
-    void setZombie(int zombie);
-    void fightZombies(int zombies);
-    void init(int numX, int numY);
-    void moveCharacter(int currentX_, int currentY_);
-    void displayAlienStatus(int &A_health, int A_attack_damage, int A_attack_range);
-    void displayZombieStatus(int numZombies, int Z_health, int Z_attack_damage, int Z_attack_range);
-    void resetGrid(vector<vector<char>> &grid, int &currentX, int &currentY);
-
-    int rows_, col_;
-    int zombies;
-    char save, load, direction, arrow, help, quit;
+    private:
+        vector<vector<char>> map_; 
+        //int column_, row_; 
+        int column, row;
+    public:
+        int column_, row_;
+        int x, y, x_, y_;
+        int oddnum_row, oddnum_column, zombie_num;
+        char yesno;
+        int action_input;
+        int row_true = 0, column_true = 0, zombie_true = 0;
+        
+        Game(int column = noOfcolumn , int row = noOfrow);
+        void init(int column, int row);
+        void startup() const, default_settings() const, board_settings() const, zombie_settings() const;
+        void mergeArrays(int objects[], int zombies_array[], int noOfobjects, int zombies, int new_objects[]);
+        void zombie() const;
+        void display() const, divider() const;
+        void action() const;
 };
+
+Game::Game(int column, int row)
+{
+    init(column, row); 
+}
+
+void Game::init(int column, int row)
+{
+    column_ = column;
+    row_ = row;
+
+    char objects[] = {'^', 'v', '>', '<', 'h', 'p', 'r', ' ', ' ', ' '}; //objects
+    char zombies_array[] = {'1'}; //zombies
+
+    int noOfObjects = 10; // number of objects in the objects array
+
+    // create dynamic 2D array using vector
+    map_.resize(row_); // to create empty rows
+    for (int i = 0; i < row_; ++i)
+    {
+        map_[i].resize(column_); // we resize each row
+    }
+
+    // put random characters into dimensional vector array
+    for (int i = 0; i < row_; ++i)
+    {
+        for (int j = 0; j < column_; ++j)
+        {
+            int objNo = rand() % noOfObjects;
+            map_[i][j] = objects[objNo];
+        }
+    }
+}
+
+/*void Game::mergeArrays(int objects[], int zombies_array[], int noOfobjects, int zombies, int new_objects[]) // merge arrays for randomisation
+{
+    for (int i = 0; i < noOfobjects; i++)
+    {
+        new_objects[i] = objects[i];
+    }
+    for (int i = noOfobjects; i < zombies + noOfobjects; i++)
+    {
+        new_objects[i] = zombies_array[i - noOfobjects];
+    }
+}*/
+
+void Game::zombie() const // create zombies randomly
+{
+    srand(time(0));
+    int zombies_array[9];
+    int new_objects[19];
+}
 
 class Alien
 {
-public:
-    int life;
-    int attack;
-
-    Alien()
-    {
-        srand(time(nullptr));      // seed the random number generator
-        life = rand() % 101 + 100; // life between 100 and 200
-        attack = 0;                // always start from 0
-    }
+    private:
+        vector<vector<char>> map2;
+        int x_, y_;
+        char heading_; //either '^', '>', '<', 'v'
+    public:
+        Alien();
+        void land(Game &game);
+        void moveUp(Game &game);
+        void moveDown(Game &game);
+        void moveLeft(Game &game);
+        void moveRight(Game &game);
+        int getX() const;
+        int getY() const;
+        char getHeading() const;
 };
 
-class Zombie
-{
-public:
-    int life;
-    int attack;
-    int range;
+Alien::Alien()
+{    
+}
 
-    Zombie(int boardSize)
-    {
-        srand(time(nullptr));                 // seed the random number generator
-        life = rand() % 101 + 200;            // life between 200 and 300
-        attack = rand() % (life + 1);         // attack between 0 and life
-        range = rand() % (boardSize / 2) + 1; // range between 1 and half of boardSize
-    }
-};
-AVZ::AVZ(int rows, int col, int zombie)
+void Alien::land(Game &game)
+{   
+    Alien info;
+    x_ = game.row_ / 2;
+    y_ = game.column_ / 2;
+    info.heading_ = ' ';
+    map2.resize(game.row_, vector<char>(game.column_, ' '));
+    map2[x_][y_] = heading_;
+
+}
+
+void Alien::moveUp(Game &game)
 {
-    rows_ = rows;
-    col_ = col;
-    zombies = zombie;
-    map_.resize(rows_);
-    for (int i = 0; i < rows_; i++)
-    {
-        map_[i].resize(col_);
+    if (x_ > 0) {
+        map2[x_][y_] = '^';
+        x_--;
+        map2[x_][y_] = heading_;
     }
 }
 
-void AVZ::initArray() // initialize array with some values
+void Alien::moveDown(Game &game)
 {
-    char characters[] = {' ', ' ', ' ', ' ', ' ', 'r', '^', '>', '<', 'v', 'p', 'h'};
-    int noOfObjects = 12;
+    if (x_ < game.row_ - 1) {
+        map2[x_][y_] = 'v';
+        x_++;
+        map2[x_][y_] = heading_;
+    }
+}
 
-    for (int i = 0; i < map_.size(); i++)
-    {
-        for (int j = 0; j < col_; j++)
-        {
-            map_[i][j] = characters[rand() % 5];
+void Alien::moveLeft(Game &game)
+{
+    if (y_ > 0) {
+        map2[x_][y_] = '<';
+        y_--;
+        map2[x_][y_] = heading_;
+    }
+}
+
+void Alien::moveRight(Game &game)
+{
+    if (y_ < game.column_ - 1) {
+        map2[x_][y_] = '>';
+        y_++;
+        map2[x_][y_] = heading_;
+    }
+}
+
+int Alien::getX() const
+{
+    return x_;
+}
+
+int Alien::getY() const
+{
+    return y_;
+}
+
+char Alien::getHeading() const
+{
+    return heading_;
+}
+
+void Game::startup() const // startup interface
+{
+    Game info;
+    cout << "Assignment (Part 1)" << endl;
+    cout << "===================" << endl;
+    cout << "Launching Alien VS Zombies...\n" << endl;
+
+    std::cout << "Press Enter to Continue <";
+    std::cin.get();
+    cout << "\n" << endl;
+}
+
+void Game::board_settings() const // board size input
+{
+    Game info;
+    
+    cout << "================================" << endl;
+    cout << "         Board Settings" << endl;
+    cout << "================================" << endl;
+
+    while (info.row_true < 1) { // checking whether row input is odd
+        cout << "How many row(s) (min. 3)? : ";
+        cin >> info.oddnum_row;
+        if ((info.oddnum_row % 2 == 1) && (info.oddnum_row >= 3) && (info.oddnum_row <= 13)) {
+            noOfrow = info.oddnum_row;
+            info.row_true = 1;
+        }
+         else {
+            cout << "Please enter odd numbers only (min 3/max 13)!!!" << endl << endl; // if user input is even number
         }
     }
-
-    for (int i = 0; i < map_.size(); i++)
-    {
-        for (int j = 0; j < col_; j++)
-        {
-            int objNo = rand() % noOfObjects;
-            map_[i][j] = characters[objNo];
-        }
-    }
-    int centerRow = rows_ / 2;
-    int centerCol = col_ / 2;
-    map_[centerRow][centerCol] = 'A';
-}
-
-void AVZ::displayAlienStatus(int &A_health, int A_attack_damage, int A_attack_range)
-{
-
-    cout << "Alien Status  >>>";
-    cout << " ";
-    cout << "Health: " << A_health;
-
-    cout << " ";
-    cout << "| Attack Damage: " << A_attack_damage;
-    cout << " ";
-    cout << "| Attack Range: " << A_attack_range << endl;
-}
-
-void AVZ::displayZombieStatus(int numZombies, int Z_health, int Z_attack_damage, int Z_attack_range)
-{
-
-    for (int i = 0; i < numZombies; i++)
-    {
-        cout << "Zombie Status"
-             << " " << i + 1 << ">>>";
-        cout << " ";
-        cout << "Health: " << Z_health;
-        cout << " ";
-        cout << "| Attack Damage: " << Z_attack_damage;
-        cout << " ";
-        cout << "| Attack Range: " << Z_attack_range << endl;
-    }
-}
-
-void AVZ::fightZombies(int zombies) {
-    // Generate the alien's life value
-    srand(time(NULL)); // seed the random number generator
-    int alienLife = rand() % 101 + 100; // life between 100 and 200
-    int alienAttack = 0; // Setting the alien's attack value to zero
-
-    // Loop over the zombies
-    for (int i = 1; i <= zombies; i++)
-    {
-        // Generate the zombie's life, attack, and range values
-        int zombieLife = rand() % 101 + 100; // generate random life value between 100 and 200
-        int zombieAttack = rand() % 11 + 90; // generate random attack value between 90 and 100
-        int zombieRange = rand() % 5 + 1;
-
-        // Output the zombie's information
-        cout << "Zombie " << i << "    Life:  " << zombieLife << "    Attack:  " << zombieAttack << " Range:     " << zombieRange << endl;
-    }
-
-    // Output the alien's information
-    cout << "Alien       Life: " << alienLife << "   Attack:" << alienAttack << endl;
-}
-
-void AVZ::resetGrid(vector<vector<char>> &grid, int &currentX, int &currentY)
-{
-    for (int i = 0; i < grid.size(); i++)
-    {
-        for (int j = 0; j < grid[i].size(); j++)
-        {
-            if (grid[i][j] == '.' && (i != currentX || j != currentY))
-            {
-                grid[i][j] = ' ';
-
-                // Generate new game object (except in the Alien trail)
-                srand(time(NULL)); // Initialize the random seed
-
-                int objNo;
-                do
-                {
-                    objNo = rand() % 4; // Generate a random game object index
-                } while (objNo == 2);   // Check if the game object is not ' '
-
-                char objects[] = {'p', 'h', 'r', ' ', ' ', ' '}; // Define the game objects
-                grid[i][j] = objects[objNo];
-            }
+    while (info.column_true < 1) { // checking whether column input is odd
+        cout << "How many column(s)? (min. 3): ";
+        cin >> info.oddnum_column;
+        if ((info.oddnum_column % 2 == 1) && (info.oddnum_column >= 3) && (info.oddnum_column <= 13)) {
+            noOfcolumn = info.oddnum_column;
+            info.column_true = 1;
+        } else {
+            cout << "Please enter odd numbers only (min 3/max 13)!!!" << endl << endl; // if user input is even number
         }
     }
 }
 
-void AVZ::displayArray() const
+void Game::zombie_settings() const // zombie input
 {
-    cout << " " << endl;
-    cout << "~~~~~ᕙ(`▿´)ᕗ~~~~~~" << endl;
-    cout << "+. Alien Vs Zombie .+" << endl;
-    cout << "~~~~~ᕙ(`▿´)ᕗ~~~~~~" << endl;
-    cout << " " << endl;
-    // for each row
-    for (int i = 0; i < map_.size(); ++i)
+    Game info;
+    
+    cout << "================================" << endl;
+    cout << "         Zombie Settings" << endl;
+    cout << "================================" << endl;
+
+    while (info.zombie_true < 1) { // checking whether input is between 1-9
+        cout << "How many Zombie(s) (1-9)? : ";
+        cin >> info.zombie_num;
+        if ((0 < info.zombie_num) && (info.zombie_num < 10)) {
+            zombies = info.zombie_num;
+            info.zombie_true = 1;
+        } else {
+            cout << "Please enter betweeen 1-9 only!!!" << endl << endl; //range for number of zombies
+        }
+    }
+}
+
+void Game::default_settings() const // display default setting interface
+{
+    Game info;
+
+    cout << "================================" << endl;
+    cout << "        " << name_setting << endl;
+    cout << "================================" << endl;
+    cout << "Board Rows      : "<< noOfrow << endl;
+    cout << "Board Columns   : "<< noOfcolumn << endl;
+    cout << "Zombie(s) Count : "<< zombies << endl;
+    cout << "================================" << endl;
+
+    cout << "Change " << name_setting << "? (y/n) : ";
+    cin >> info.yesno;
+
+    if (info.yesno == 'y') { // if input is yes
+        Game::board_settings();
+        Game::zombie_settings();
+        name_setting = "Current Settings";
+
+        Game::default_settings();
+    }
+    else if (info.yesno == 'n') { // if input is no
+        cout << "Launching Game...\n" << endl;
+        info.Game::display();
+    }
+}
+
+void Game::mergeArrays(int objects[], int zombies_array[], int noOfobjects, int zombies, int new_objects[])
+{
+    int i = 0, j = 0, k = 0;
+      // traverse the arr1 and insert its element in arr3
+      while(i < noOfobjects){
+      new_objects[k++] = objects[i++];
+    }
+        
+      // now traverse arr2 and insert in arr3
+      while(j < zombies){
+      new_objects[k++] = zombies_array[j++];
+    }
+        
+      // sort the whole array arr3
+      sort(new_objects, new_objects + noOfobjects + zombies);
+}
+
+void Game::divider() const
+{
+    for (int j = 0; j < column_; ++j)
+    {
+        cout << "====";
+    }
+    cout << "========" << endl;
+}
+
+void Game::action() const //asking player to pick action
+{
+    int action_input;
+
+    cout << "1. Move Alien\n";
+    cout << "2. Change arrow direction\n" << endl;
+    cout << "Which do you want to move? : ";
+    cin >> action_input;
+
+    if (action_input == 1) {
+        cout << ">>> Alien is moving\n";
+    }
+    else if (action_input == 2) {
+        cout << ">>> Arrow is changing\n";
+    }
+    Game::divider();
+}
+
+void Game::display() const
+{
+    Game info;
+
+    Game::divider();
+    cout << "  Alien Vs Zombies" << endl;
+    Game::divider();
+
+    for (int i = 0; i < row_; ++i) // for each row
     {
         // display upper border of the row
-        cout << " ";
-        cout << " ";
-        for (int j = 0; j < col_; ++j)
+        cout << "   ";
+        for (int j = 0; j < column_; ++j)
         {
-            cout << "+-";
+            cout << "+---";
         }
         cout << "+" << endl;
+
         // display row number
-        cout << setfill(' ') << (rows_ - i) << " ";
+        cout << setw(2) << (row_ - i);
+
         // display cell content and border of each column
-        for (int j = 0; j < col_; ++j)
+        cout << "";
+
+        int midrow = noOfrow / 2;
+        int midcolumn = noOfcolumn / 2;
+
+        for (int j = 0; j < column_; ++j)
         {
-            cout << "|" << map_[i][j];
+            cout << " | ";
+            if ((i == midrow) && (j == midcolumn)) { // alien spawnpoint
+                cout << "A";
+            }
+            else {
+                cout << map_[i][j]; // other objects
+            }  
         }
-        cout << "|" << endl;
+        cout << " |" << endl;
     }
+
     // display lower border of the last row
-    cout << " ";
-    cout << " ";
-    for (int j = 0; j < col_; ++j)
+    cout << "   ";
+    for (int j = 0; j < column_; ++j)
     {
-        cout << "+-";
+        cout << "+---";
     }
     cout << "+" << endl;
+
     // display column number
-    cout << " ";
-    cout << " ";
-    for (int j = 0; j < col_; ++j)
+    if (noOfcolumn > 9) { // changing spacing when column > 9
+    cout << "  "; 
+    for (int j = 0; j < column_; ++j) // first row
     {
         int digit = (j + 1) / 10;
-        cout << " ";
+        cout << "   ";
         if (digit == 0)
             cout << " ";
         else
             cout << digit;
     }
     cout << endl;
-    cout << " ";
-    cout << " ";
-    for (int j = 0; j < col_; ++j)
+    cout << "  ";
+    for (int j = 0; j < column_; ++j) // second row
     {
-        cout << " " << (j + 1) % 10;
-    }
-
-    cout << endl
-         << endl;
-}
-
-void AVZ::insertRandomCharacter(char ch)
-{
-    for (int i = 0; i < map_.size(); i++)
-    {
-        for (int j = 0; j < map_[i].size(); j++)
-        {
-            // if (rand() % 2 == 0)
-            //{
-            //  map_[i][j] = ch;
-            //}
-        }
-    }
-}
-
-void AVZ::displaySettings() const
-{
-    cout << "Board Rows   : " << rows_ << endl;
-    cout << "Board Columns: " << col_ << endl;
-    cout << "Zombie Count : " << zombies << endl;
-}
-
-void AVZ::setRows(int rows)
-{
-    rows_ = rows;
-}
-
-void AVZ::setCol(int col)
-{
-    col_ = col;
-}
-
-void AVZ::setZombie(int zombies)
-{
-    int zombiesPlaced = 0;
-    while (zombiesPlaced < zombies)
-    {
-        int x = rand() % rows_;
-        int y = rand() % col_;
-        if (map_[x][y] == ' ')
-        {
-            map_[x][y] = '0' + (zombiesPlaced + 1) % 10;
-            zombiesPlaced++;
-        }
-    }
-}
-
-void AVZ::moveCharacter(int rows_, int col_)
-// *********************************************************
-// Course: TCP1101 PROGRAMMING FUNDAMENTALS
-// Year: Trimester 1, 2022/23 (T2215)
-// Lab: TT5L
-// Names: NUR FARAHIYA AIDA  | NUR ALIA AMELISA SYAZREEN | WAN ALIA ADLINA
-// IDs: 1211103194 | 1211103602 | 1211103227
-// Emails: 1211103194@student.mmu.edu.my | 1211103602@student.mmu.edu.my | 1211103227@student.mmu.edu.my
-// Phones: 011-51121620 | 014-2100540 | 019-9935060
-// *********************************************************
-
-#include <iostream>
-#include <string>
-#include <vector>
-#include <cstdlib> // for system()
-#include <ctime>   // for time() in srand( time(NULL) );
-#include <iomanip> // for setw()
-#include <conio.h> //for press any key
-#include <stdlib.h>
-#include <fstream>
-#include <utility>
-using namespace std;
-
-class AVZ
-{
-private:
-    vector<vector<char>> map_; // convention to put trailing underscore
-    int numX_, numY_;
-    int currentX_, currentY_; // to indicate private data
-
-public:
-    AVZ(int rows = 5, int col = 15, int zombie = 2); // constructor with number of rows and columns
-    void initArray();                                // function to intialize the array
-    void displayArray() const;                       // function to display the array
-    void displaySettings() const;                    // to display default game settings
-    void insertRandomCharacter(char ch);
-    int getDimX() const;
-    int getDimY() const;
-    void setRows(int rows);
-    void setCol(int col);
-    void setZombie(int zombie);
-    void fightZombies(int zombies);
-    void init(int numX, int numY);
-    void moveCharacter(int currentX_, int currentY_);
-    void displayAlienStatus(int &A_health, int A_attack_damage, int A_attack_range);
-    void displayZombieStatus(int numZombies, int Z_health, int Z_attack_damage, int Z_attack_range);
-    void resetGrid(vector<vector<char>> &grid, int &currentX, int &currentY);
-
-    int rows_, col_;
-    int zombies;
-    char save, load, direction, arrow, help, quit;
-};
-
-class Alien
-{
-public:
-    int life;
-    int attack;
-
-    Alien()
-    {
-        srand(time(nullptr));      // seed the random number generator
-        life = rand() % 101 + 100; // life between 100 and 200
-        attack = 0;                // always start from 0
-    }
-};
-
-class Zombie
-{
-public:
-    int life;
-    int attack;
-    int range;
-
-    Zombie(int boardSize)
-    {
-        srand(time(nullptr));                 // seed the random number generator
-        life = rand() % 101 + 200;            // life between 200 and 300
-        attack = rand() % (life + 1);         // attack between 0 and life
-        range = rand() % (boardSize / 2) + 1; // range between 1 and half of boardSize
-    }
-};
-AVZ::AVZ(int rows, int col, int zombie)
-{
-    rows_ = rows;
-    col_ = col;
-    zombies = zombie;
-    map_.resize(rows_);
-    for (int i = 0; i < rows_; i++)
-    {
-        map_[i].resize(col_);
-    }
-}
-
-void AVZ::initArray() // initialize array with some values
-{
-    char characters[] = {' ', ' ', ' ', ' ', ' ', 'r', '^', '>', '<', 'v', 'p', 'h'};
-    int noOfObjects = 12;
-
-    for (int i = 0; i < map_.size(); i++)
-    {
-        for (int j = 0; j < col_; j++)
-        {
-            map_[i][j] = characters[rand() % 5];
-        }
-    }
-
-    for (int i = 0; i < map_.size(); i++)
-    {
-        for (int j = 0; j < col_; j++)
-        {
-            int objNo = rand() % noOfObjects;
-            map_[i][j] = characters[objNo];
-        }
-    }
-    int centerRow = rows_ / 2;
-    int centerCol = col_ / 2;
-    map_[centerRow][centerCol] = 'A';
-}
-
-void AVZ::displayAlienStatus(int &A_health, int A_attack_damage, int A_attack_range)
-{
-
-    cout << "Alien Status  >>>";
-    cout << " ";
-    cout << "Health: " << A_health;
-
-    cout << " ";
-    cout << "| Attack Damage: " << A_attack_damage;
-    cout << " ";
-    cout << "| Attack Range: " << A_attack_range << endl;
-}
-
-void AVZ::displayZombieStatus(int numZombies, int Z_health, int Z_attack_damage, int Z_attack_range)
-{
-
-    for (int i = 0; i < numZombies; i++)
-    {
-        cout << "Zombie Status"
-             << " " << i + 1 << ">>>";
-        cout << " ";
-        cout << "Health: " << Z_health;
-        cout << " ";
-        cout << "| Attack Damage: " << Z_attack_damage;
-        cout << " ";
-        cout << "| Attack Range: " << Z_attack_range << endl;
-    }
-}
-
-void AVZ::fightZombies(int zombies) {
-    // Generate the alien's life value
-    srand(time(NULL)); // seed the random number generator
-    int alienLife = rand() % 101 + 100; // life between 100 and 200
-    int alienAttack = 0; // Setting the alien's attack value to zero
-
-    // Loop over the zombies
-    for (int i = 1; i <= zombies; i++)
-    {
-        // Generate the zombie's life, attack, and range values
-        int zombieLife = rand() % 101 + 100; // generate random life value between 100 and 200
-        int zombieAttack = rand() % 11 + 90; // generate random attack value between 90 and 100
-        int zombieRange = rand() % 5 + 1;
-
-        // Output the zombie's information
-        cout << "Zombie " << i << "    Life:  " << zombieLife << "    Attack:  " << zombieAttack << " Range:     " << zombieRange << endl;
-    }
-
-    // Output the alien's information
-    cout << "Alien       Life: " << alienLife << "   Attack:" << alienAttack << endl;
-}
-
-void AVZ::resetGrid(vector<vector<char>> &grid, int &currentX, int &currentY)
-{
-    for (int i = 0; i < grid.size(); i++)
-    {
-        for (int j = 0; j < grid[i].size(); j++)
-        {
-            if (grid[i][j] == '.' && (i != currentX || j != currentY))
-            {
-                grid[i][j] = ' ';
-
-                // Generate new game object (except in the Alien trail)
-                srand(time(NULL)); // Initialize the random seed
-
-                int objNo;
-                do
-                {
-                    objNo = rand() % 4; // Generate a random game object index
-                } while (objNo == 2);   // Check if the game object is not ' '
-
-                char objects[] = {'p', 'h', 'r', ' ', ' ', ' '}; // Define the game objects
-                grid[i][j] = objects[objNo];
-            }
-        }
-    }
-}
-
-void AVZ::displayArray() const
-{
-    cout << " " << endl;
-    cout << "~~~~~ᕙ(`▿´)ᕗ~~~~~~" << endl;
-    cout << "+. Alien Vs Zombie .+" << endl;
-    cout << "~~~~~ᕙ(`▿´)ᕗ~~~~~~" << endl;
-    cout << " " << endl;
-    // for each row
-    for (int i = 0; i < map_.size(); ++i)
-    {
-        // display upper border of the row
-        cout << " ";
-        cout << " ";
-        for (int j = 0; j < col_; ++j)
-        {
-            cout << "+-";
-        }
-        cout << "+" << endl;
-        // display row number
-        cout << setfill(' ') << (rows_ - i) << " ";
-        // display cell content and border of each column
-        for (int j = 0; j < col_; ++j)
-        {
-            cout << "|" << map_[i][j];
-        }
-        cout << "|" << endl;
-    }
-    // display lower border of the last row
-    cout << " ";
-    cout << " ";
-    for (int j = 0; j < col_; ++j)
-    {
-        cout << "+-";
-    }
-    cout << "+" << endl;
-    // display column number
-    cout << " ";
-    cout << " ";
-    for (int j = 0; j < col_; ++j)
-    {
-        int digit = (j + 1) / 10;
-        cout << " ";
-        if (digit == 0)
-            cout << " ";
-        else
-            cout << digit;
+        cout << "   " << (j + 1) % 10;
     }
     cout << endl;
-    cout << " ";
-    cout << " ";
-    for (int j = 0; j < col_; ++j)
+    }
+    else { // when column < 9
+    cout << "  ";
+    for (int j = 0; j < column_; ++j) // first row 
     {
-        cout << " " << (j + 1) % 10;
+        cout << "   " << (j + 1) % 10;
+    }
+    cout << endl;
     }
 
-    cout << endl
-         << endl;
-}
+    Game::divider();
 
-void AVZ::insertRandomCharacter(char ch)
-{
-    for (int i = 0; i < map_.size(); i++)
-    {
-        for (int j = 0; j < map_[i].size(); j++)
-        {
-            // if (rand() % 2 == 0)
-            //{
-            //  map_[i][j] = ch;
-            //}
-        }
-    }
-}
-
-void AVZ::displaySettings() const
-{
-    cout << "Board Rows   : " << rows_ << endl;
-    cout << "Board Columns: " << col_ << endl;
-    cout << "Zombie Count : " << zombies << endl;
-}
-
-void AVZ::setRows(int rows)
-{
-    rows_ = rows;
-}
-
-void AVZ::setCol(int col)
-{
-    col_ = col;
-}
-
-void AVZ::setZombie(int zombies)
-{
-    int zombiesPlaced = 0;
-    while (zombiesPlaced < zombies)
-    {
-        int x = rand() % rows_;
-        int y = rand() % col_;
-        if (map_[x][y] == ' ')
-        {
-            map_[x][y] = '0' + (zombiesPlaced + 1) % 10;
-            zombiesPlaced++;
-        }
-    }
-}
-
-void AVZ::command(int row, int column)
-{
-    string command;
-    int mapCols;
-    int mapRows;
-    int dimx;
-    int dimy;
-    int zombies;
-    int alienLife_;
-    int alienAttack_;
-    int zombieLife_;
-    int zombieAttack_;
-    char run;
-    char choice;
-    char direction;
-    char help;
-    string fileName;
-    string savefileName;
-    
-    // char arrow,
-    // save, load, quit;
-
-    int centerRow = row / 2;
-    int centerCol = column / 2;
-    map_[centerRow][centerCol] = alien;
-
-    cout << "Are you ready to play? (y/n) = ";
-    cin >> command;
-    system("pause");
-
-    if (command == "y" || command == "Y")
-        while (run = true)
-        {
-
-            if (centerRow >= 0 && centerRow < row && centerCol >= 0 && centerCol < column)
-            {
-                map_[centerRow][centerCol] = alien;
-            }
-            else
-            {
-                std::cerr << "Error: centerRow and centerCol are out of bounds." << std::endl;
-            }
-
-            char directionAlien;
-            cout << "\nEnter your command : ";
-            cin >> command;
-
-            if (command == "left" || command == "Left")
-            {
-                system("cls");
-                display();
-                for (int c = centerCol; c > 0; c--)
-                {
-                    map_[centerRow][centerCol] = trail;
-                    centerCol -= 1;
-                    if (map_[centerRow][centerCol] == 'H')
-                    {
-                        cout << endl;
-                        cout << "Health pack is detected" << endl;
-                        cout << "Alien finds a health pack." << endl;
-                        cout << "Alien's life is increased by 20." << endl;
-                        alienLife_ += 20;
-                    }
-                    else if (map_[centerRow][centerCol] == 'P')
-                    {
-                        map_[centerRow][centerCol] == 'P';
-                        cout << endl;
-                        cout << "A Pod is detected" << endl;
-                        cout << "Alien finds a Pod" << endl;
-                        // cout << zombie mana terdekat kena attack
-
-                        zombieLife_ -= 10;
-                    }
-                    else if (map_[centerRow][centerCol] == 'R')
-                    {
-                        cout << endl;
-                        cout << "Rock is detected" << endl;
-                        cout << "Alien finds a rock" << endl;
-                        system("pause");
-
-                        // generate a ranodom number between 0 and 1
-                        int random = rand() % 2;
-                        if (random == 0)
-                        {
-                            map_[centerRow][centerCol] == 'P';
-                            cout << endl;
-                            cout << "A Pod appears on the rock" << endl;
-                            cout << "Alien finds a pod" << endl;
-                            // cout << zombie mana terdekat kena attack
-
-                            zombieLife_ -= 10;
-                        }
-                        else
-                        {
-                            (map_[centerRow][centerCol]== 'H');
-                            cout << endl;
-                            cout << "A Health pack appears on the rock" << endl;
-                            cout << "Alien finds a health pack." << endl;
-                            cout << "Alien's life is increased by 20." << endl;
-
-                            alienLife_ += 20;
-                        }
-                    }
-                    else if (map_[centerRow][centerCol] == '^' || map_[centerRow][centerCol] == 'v' || map_[centerRow][centerCol] == '<' || map_[centerRow][centerCol] == '>')
-                    {
-                        cout << endl;
-                        cout << "Arrow is detected" << endl;
-                        cout << "Alien finds an arrow." << endl;
-                        cout << "Alien's attack is increased by 20." << endl;
-                        alienAttack_ += 20;
-                        map_[centerRow][centerCol] = trail;
-                    }
-                    map_[centerRow][centerCol] = alien;
-                    system("pause");
-                    system("cls");
-                    display();
-                }
-                break;
-            }
-            else if (command == "right" || command == "Right")
-            {
-                system("cls");
-                display();
-                for (int c = centerCol; c < mapCols; c++)
-                {
-                    map_[centerRow][centerCol] = trail;
-                    centerCol += 1;
-                    if (map_[centerRow][centerCol] == 'H')
-                    {
-                        cout << endl;
-                        cout << "Health pack is detected" << endl;
-                        cout << "Alien finds a health pack." << endl;
-                        cout << "Alien's life is increased by 20." << endl;
-                        alienLife_ += 20;
-                    }
-                    else if (map_[centerRow][centerCol] == 'P')
-                    {
-                        map_[centerRow][centerCol] == 'P';
-                        cout << endl;
-                        cout << "A Pod is detected" << endl;
-                        cout << "Alien finds a Pod" << endl;
-                        // cout << zombie mana terdekat kena attack
-
-                        zombieLife_ -= 10;
-                    }
-                    else if (map_[centerRow][centerCol] == 'R')
-                    {
-                        cout << endl;
-                        cout << "Rock is detected" << endl;
-                        cout << "Alien finds a rock" << endl;
-                        system("pause");
-
-                        // generate a ranodom number between 0 and 1
-                        int random = rand() % 2;
-                        if (random == 0)
-                        {
-                            map_[centerRow][centerCol] == 'P';
-                            cout << endl;
-                            cout << "A Pod appears on the rock" << endl;
-                            cout << "Alien finds a pod" << endl;
-                            // cout << zombie mana terdekat kena attack
-
-                            zombieLife_ -= 10;
-                        }
-                        else
-                        {
-                            (map_[centerRow][centerCol] == 'H');
-                            cout << endl;
-                            cout << "A Health pack appears on the rock" << endl;
-                            cout << "Alien finds a health pack." << endl;
-                            cout << "Alien's life is increased by 20." << endl;
-
-                            alienLife_ += 20;
-                        }
-                    }
-                    else if (map_[centerRow][centerCol] == '^' || map_[centerRow][centerCol] == 'v' || map_[centerRow][centerCol] == '<' || map_[centerRow][centerCol] == '>')
-                    {
-                        cout << endl;
-                        cout << "Arrow is detected" << endl;
-                        cout << "Alien finds an arrow." << endl;
-                        cout << "Alien's attack is increased by 20." << endl;
-                        alienAttack_ += 20;
-                        map_[centerRow][centerCol] = trail;
-                    }
-                    map_[centerRow][centerCol] = alien;
-                    system("pause");
-                    system("cls");
-                    display();
-                }
-                break;
-            }
-            else if (command == "up" || command == "Up")
-            {
-                system("cls");
-                display();
-                for (int r = centerRow; r > 0; r--)
-                {
-                    map_[centerRow][centerCol] = trail;
-                    centerRow -= 1;
-                    if (map_[centerRow][centerCol]  == 'H')
-                    {
-                        cout << endl;
-                        cout << "Health pack is detected" << endl;
-                        cout << "Alien finds a health pack." << endl;
-                        cout << "Alien's life is increased by 20." << endl;
-                        alienLife_ += 20;
-                    }
-                    else if (map_[centerRow][centerCol] == 'P')
-                    {
-                        map_[centerRow][centerCol] == 'P';
-                        cout << endl;
-                        cout << "A Pod is detected" << endl;
-                        cout << "Alien finds a Pod" << endl;
-                        // cout << zombie mana terdekat kena attack
-
-                        zombieLife_ -= 10;
-                    }
-                    else if (map_[centerRow][centerCol] == 'R')
-                    {
-                        cout << endl;
-                        cout << "Rock is detected" << endl;
-                        cout << "Alien finds a rock" << endl;
-                        system("pause");
-
-                        // generate a ranodom number between 0 and 1
-                        int random = rand() % 2;
-                        if (random == 0)
-                        {
-                            map_[centerRow][centerCol] == 'P';
-                            cout << endl;
-                            cout << "A Pod appears on the rock" << endl;
-                            cout << "Alien finds a pod" << endl;
-                            // cout << zombie mana terdekat kena attack
-
-                            zombieLife_ -= 10;
-                        }
-                        else
-                        {
-                            (map_[centerRow][centerCol] == 'H');
-                            cout << endl;
-                            cout << "A Health pack appears on the rock" << endl;
-                            cout << "Alien finds a health pack." << endl;
-                            cout << "Alien's life is increased by 20." << endl;
-
-                            alienLife_ += 20;
-                        }
-                    }
-                    else if (map_[centerRow][centerCol] == '^' || map_[centerRow][centerCol]  == 'v' || map_[centerRow][centerCol]  == '<' || map_[centerRow][centerCol] == '>')
-                    {
-                        cout << endl;
-                        cout << "Arrow is detected" << endl;
-                        cout << "Alien finds an arrow." << endl;
-                        cout << "Alien's attack is increased by 20." << endl;
-                        alienAttack_ += 20;
-                        map_[centerRow][centerCol] = trail;
-                    }
-                    map_[centerRow][centerCol] = alien;
-                    system("pause");
-                    system("cls");
-                    display();
-                }
-                break;
-            }
-            else if (command == "down" || command == "Down")
-            {
-                system("cls");
-                display();
-                for (int r = centerRow; r < mapRows; r++)
-                {
-                    map_[centerRow][centerCol] = trail;
-                    centerRow += 1;
-                    if (map_[centerRow][centerCol] == 'H')
-                    {
-                        cout << endl;
-                        cout << "Health pack is detected" << endl;
-                        cout << "Alien finds a health pack." << endl;
-                        cout << "Alien's life is increased by 20." << endl;
-                        alienLife_ += 20;
-                    }
-                    else if (map_[centerRow][centerCol] == 'P')
-                    {
-                        map_[centerRow][centerCol] == 'P';
-                        cout << endl;
-                        cout << "A Pod is detected" << endl;
-                        cout << "Alien finds a Pod" << endl;
-                        // cout << zombie mana terdekat kena attack
-
-                        zombieLife_ -= 10;
-                    }
-                    else if (map_[centerRow][centerCol] == 'R')
-                    {
-                        cout << endl;
-                        cout << "Rock is detected" << endl;
-                        cout << "Alien finds a rock" << endl;
-                        system("pause");
-
-                        // generate a ranodom number between 0 and 1
-                        int random = rand() % 2;
-                        if (random == 0)
-                        {
-                            map_[centerRow][centerCol] == 'P';
-                            cout << endl;
-                            cout << "A Pod appears on the rock" << endl;
-                            cout << "Alien finds a pod" << endl;
-                            // cout << zombie mana terdekat kena attack
-
-                            zombieLife_ -= 10;
-                        }
-                        else
-                        {
-                            (map_[centerRow][centerCol] == 'H');
-                            cout << endl;
-                            cout << "A Health pack appears on the rock" << endl;
-                            cout << "Alien finds a health pack." << endl;
-                            cout << "Alien's life is increased by 20." << endl;
-
-                            alienLife_ += 20;
-                        }
-                    }
-                    else if (map_[centerRow][centerCol] == '^' || map_[centerRow][centerCol] == 'v' || map_[centerRow][centerCol] == '<' || map_[centerRow][centerCol] == '>')
-                    {
-                        cout << endl;
-                        cout << "Arrow is detected" << endl;
-                        cout << "Alien finds an arrow." << endl;
-                        cout << "Alien's attack is increased by 20." << endl;
-                        alienAttack_ += 20;
-                        map_[centerRow][centerCol]  = trail;
-                    }
-                    map_[centerRow][centerCol]  = alien;
-                    system("pause");
-                    system("cls");
-                    display();
-                }
-                break;
-            }
-            else if (command == "save" || command == "Save")
-            {
-                save_game(vector<vector<char>> &map_, dimY_, dimX_, alienLife_, alienAttack_, zombies, zombieLife_, zombieAttack_, zombieRange_, string &saveFileName)
-            }
-
-            else if (command == "load" || command == "Load")
-            {
-                load_game(game_state);
-            }
-
-            else if (command == "help" || command == "Help")
-            {
-                howtoplay();
-            }
-
-            else if (command == "quit" || command == "Quit")
-            {
-                break;
-            }
-
-            else
-            {
-                cout << "Alien try to get out of border" << endl;
-                run = false;
-            }
-
-            // system("cls");
-            display();
-        }
-}
-
-void generateValues(int &life, int &attack)
-{
-    life = rand() % 100 + 1;  // generates a random number between 1 and 100
-    attack = rand() % 10 + 1; // generates a random number between 1 and 10
-                              // range = rand() % 10 + 1; // generate a random number between 1 to 10
+    Game::action(); //go to action tab
 }
 
 int main()
 {
-    AVZ game; // create object of AVZ class with default number of rows and columns
-    Zombie zombie(10);
+    // srand(time(NULL));
 
-    char characters[] = {' ', ' ', ' ', ' ', ' ', 'r', '^', '>', '<', 'v', 'p', 'h', '1', '2'};
-    game.initArray();
-    for (int i = 0; i < 14; i++)
-    {
-        game.insertRandomCharacter(characters[i]);
-    }
-    srand(time(NULL));
-    cout << "Assignment (Part 1)" << endl;
-    cout << "Let's Get Started!" << endl;
-    cout << "Default game setting:" << endl;
-    cout << "---------------------" << endl;
-    game.displaySettings();
-    cout << " " << endl;
-    {
-        cout << "Do you wish to change the game settings (y/n)?: ";
-        char choice;
-        cin >> choice;
-        int rows_, col_, zombies;
-        if (choice == 'y' || choice == 'Y')
-        {
-            cout << endl;
-            cout << "--------------------------" << endl;
-            cout << "Enter the number of rows: ";
-            cin >> rows_;
-            if (rows_ % 2 == 0)
-            {
-                cout << "Attention! Please insert odd number! " << endl;
-                cout << endl;
-                cout << "Enter the number of rows: ";
-                cin >> rows_;
-            }
-
-            cout << "Enter the number of columns: ";
-            cin >> col_;
-            if (col_ % 2 == 0)
-            {
-                cout << "Attention! Please insert odd number! " << endl;
-                cout << endl;
-                cout << "Enter the number of columns: ";
-                cin >> col_;
-            }
-
-            cout << "Enter number of zombies:";
-            cin >> zombies;
-            if (zombies > 9)
-            {
-                cout << "Too many zombies! max number of zombies is 9 " << endl;
-                cout << "Enter number of zombies:";
-                cin >> zombies;
-                return zombies; 
-            }
-
-            cout << "Settings Updated. " << endl;
-            cout << "Press any key to continue... " << endl;
-            getch();
-            game.setRows(rows_);
-            game.setCol(col_);
-            game = AVZ(rows_, col_, zombies);
-            game.initArray();
-            game.setZombie(zombies);
-
-            for (int i = 0; i < 14; i++)
-            {
-                game.insertRandomCharacter(characters[i]);
-            }
-            game.displayArray();
-        }
-        else
-        {
-            cout << "Press any key to continue..." << endl;
-            getch();
-            game.initArray();
-            for (int i = 0; i < 14; i++)
-            {
-                game.insertRandomCharacter(characters[i]);
-            }
-            game.displayArray();
-        }
+    Game game;
+    game.startup();
+    game.default_settings();
+    //game.mergeArrays(int objects[], int zombies_array[], int noOfobjects, int zombies, int new_objects[]);
+    game.zombie();
     
-    for (int i = 0; i < 1; i++){
-        game.fightZombies(zombies);
-    }
-    }
-    
-    
-   
-   
-
-    while (true)
-    {
-        cout << "Please Enter Command: ";
-        string command;
-        cin >> command;
-        char choice;
-        char save_, load_, direction_, arrow_, help_, quit_;
-        int rows_, col_, zombies;
-        int currentX_, currentY_;
-        if (command == "save" || command == "Save")
-        {
-            ofstream saveFile;
-            saveFile.open("savedGame.txt");
-            // write the current game state to the file
-            saveFile.close();
-            cout << "Game saved successfully." << endl;
-        }
-
-        if (command == "load" || command == "Load")
-        {
-            cout << " Do you want to save the current game? (y/n): ";
-            string fileName;
-            if (choice == 'n' or 'N')
-            {
-                cout << "Enter the file name to load: ";
-                cin >> fileName;
-                cout << "Game Loaded" << endl;
-            }
-        }
-        if (command == "help" || command == "Help")
-        {
-            cout << "help" << endl;
-            cout << "Commands" << endl;
-            cout << "1.  direction:(state any of the below) " << endl;
-            cout << "    up      - Move up." << endl;
-            cout << "    down    - Move down." << endl;
-            cout << "    left    - Move left." << endl;
-            cout << "    right   - Move right." << endl;
-            cout << "2.  arrow   - Change the direction of an arrow." << endl;
-            cout << "3.  help    - Display these user commands." << endl;
-            cout << "4.  save    - Save the game." << endl;
-            cout << "5.  load    - Load a game." << endl;
-            cout << "6.  quit    - Quit the game. " << endl;
-        }
-        if (command == "arrow" || command == "Arrow")
-        {
-            // cin << arrow_
-        }
-        if (command == "direction" || command == "Direction")
-        {
-            game.moveCharacter(currentX_, currentY_);
-        }
-        if (command == "quit" || command == "Quit")
-        {
-            cout << "Are you sure you want to quit the game? (y/n):";
-            char choice;
-            cin >> choice;
-            if (choice == 'y' || choice == 'Y')
-            {
-                cout << "Thank you for playing. See you again!" << endl;
-            }
-            else
-            {
-                cout << "Please Enter Command: ";
-                string command;
-                cin >> command;
-            }
-            break; // exit or terminate program
-        }
-    }
-
-    return 0;
-}
-
-void generateValues(int &life, int &attack)
-{
-    life = rand() % 100 + 1;  // generates a random number between 1 and 100
-    attack = rand() % 10 + 1; // generates a random number between 1 and 10
-                              // range = rand() % 10 + 1; // generate a random number between 1 to 10
-}
-
-int main()
-{
-    AVZ game; // create object of AVZ class with default number of rows and columns
-    Zombie zombie(10);
-
-    char characters[] = {' ', ' ', ' ', ' ', ' ', 'r', '^', '>', '<', 'v', 'p', 'h', '1', '2'};
-    game.initArray();
-    for (int i = 0; i < 14; i++)
-    {
-        game.insertRandomCharacter(characters[i]);
-    }
-    srand(time(NULL));
-    cout << "Assignment (Part 1)" << endl;
-    cout << "Let's Get Started!" << endl;
-    cout << "Default game setting:" << endl;
-    cout << "---------------------" << endl;
-    game.displaySettings();
-    cout << " " << endl;
-    {
-        cout << "Do you wish to change the game settings (y/n)?: ";
-        char choice;
-        cin >> choice;
-        int rows_, col_, zombies;
-        if (choice == 'y' || choice == 'Y')
-        {
-            cout << endl;
-            cout << "--------------------------" << endl;
-            cout << "Enter the number of rows: ";
-            cin >> rows_;
-            if (rows_ % 2 == 0)
-            {
-                cout << "Attention! Please insert odd number! " << endl;
-                cout << endl;
-                cout << "Enter the number of rows: ";
-                cin >> rows_;
-            }
-
-            cout << "Enter the number of columns: ";
-            cin >> col_;
-            if (col_ % 2 == 0)
-            {
-                cout << "Attention! Please insert odd number! " << endl;
-                cout << endl;
-                cout << "Enter the number of columns: ";
-                cin >> col_;
-            }
-
-            cout << "Enter number of zombies:";
-            cin >> zombies;
-            if (zombies > 9)
-            {
-                cout << "Too many zombies! max number of zombies is 9 " << endl;
-                cout << "Enter number of zombies:";
-                cin >> zombies;
-                return zombies; 
-            }
-
-            cout << "Settings Updated. " << endl;
-            cout << "Press any key to continue... " << endl;
-            getch();
-            game.setRows(rows_);
-            game.setCol(col_);
-            game = AVZ(rows_, col_, zombies);
-            game.initArray();
-            game.setZombie(zombies);
-
-            for (int i = 0; i < 14; i++)
-            {
-                game.insertRandomCharacter(characters[i]);
-            }
-            game.displayArray();
-        }
-        else
-        {
-            cout << "Press any key to continue..." << endl;
-            getch();
-            game.initArray();
-            for (int i = 0; i < 14; i++)
-            {
-                game.insertRandomCharacter(characters[i]);
-            }
-            game.displayArray();
-        }
-    
-    for (int i = 0; i < 1; i++){
-        game.fightZombies(zombies);
-    }
-    }
-    
-    while (true)
-    {
-        cout << "Please Enter Command: ";
-        string command;
-        cin >> command;
-        char choice;
-        char save_, load_, direction_, arrow_, help_, quit_;
-        int rows_, col_, zombies;
-        int currentX_, currentY_;
-        if (command == "save" || command == "Save")
-        {
-            ofstream saveFile;
-            saveFile.open("savedGame.txt");
-            // write the current game state to the file
-            saveFile.close();
-            cout << "Game saved successfully." << endl;
-        }
-
-        if (command == "load" || command == "Load")
-        {
-            cout << " Do you want to save the current game? (y/n): ";
-            string fileName;
-            if (choice == 'n' or 'N')
-            {
-                cout << "Enter the file name to load: ";
-                cin >> fileName;
-                cout << "Game Loaded" << endl;
-            }
-        }
-        if (command == "help" || command == "Help")
-        {
-            cout << "help" << endl;
-            cout << "Commands" << endl;
-            cout << "1.  direction:(state any of the below) " << endl;
-            cout << "    up      - Move up." << endl;
-            cout << "    down    - Move down." << endl;
-            cout << "    left    - Move left." << endl;
-            cout << "    right   - Move right." << endl;
-            cout << "2.  arrow   - Change the direction of an arrow." << endl;
-            cout << "3.  help    - Display these user commands." << endl;
-            cout << "4.  save    - Save the game." << endl;
-            cout << "5.  load    - Load a game." << endl;
-            cout << "6.  quit    - Quit the game. " << endl;
-        }
-        if (command == "arrow" || command == "Arrow")
-        {
-            // cin << arrow_
-        }
-        if (command == "direction" || command == "Direction")
-        {
-            game.moveCharacter(currentX_, currentY_);
-        }
-        if (command == "quit" || command == "Quit")
-        {
-            cout << "Are you sure you want to quit the game? (y/n):";
-            char choice;
-            cin >> choice;
-            if (choice == 'y' || choice == 'Y')
-            {
-                cout << "Thank you for playing. See you again!" << endl;
-            }
-            else
-            {
-                cout << "Please Enter Command: ";
-                string command;
-                cin >> command;
-            }
-            break; // exit or terminate program
-        }
-    }
-
-    return 0;
 }
