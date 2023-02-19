@@ -225,16 +225,17 @@ void Game::action() const //asking player to pick action
     Game game;
     char direction;
     int choices;
-    cout << ">> Action" << endl;
-    cout << "1. Move Alien" << endl;
-    cout << "2. Move Arrow" << endl;
-    cout << "3. Exit Game" << endl;
-    for (int j = 0; j < column_; ++j)
+
+    cout << ">> Action" << endl; // action statement
+    cout << "  1. Move Alien" << endl;
+    cout << "  2. Move Arrow" << endl;
+    cout << "  3. Exit Game" << endl;
+    for (int j = 0; j < column_; ++j) // soft divider
     {
         cout << "----";
     }
     cout << "--------" << endl;
-    cout << "Pick action: ";
+    cout << "Pick action: "; // asked for input
     cin >> choices;
     Game::divider();
 
@@ -255,7 +256,7 @@ void Game::action() const //asking player to pick action
         exit(0);
         Game::divider();
     }
-    else {
+    else if ((choices != 1) && (choices != 2) && (choices != 3)) {
         cout << "Please enter the accepted input only!!! (1/2/3)\n";
     }
 }
