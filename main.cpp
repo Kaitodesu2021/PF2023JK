@@ -225,9 +225,15 @@ void Game::action() const //asking player to pick action
     Game game;
     char direction;
     int choices;
+    cout << ">> Action" << endl;
     cout << "1. Move Alien" << endl;
     cout << "2. Move Arrow" << endl;
     cout << "3. Exit Game" << endl;
+    for (int j = 0; j < column_; ++j)
+    {
+        cout << "----";
+    }
+    cout << "--------" << endl;
     cout << "Pick action: ";
     cin >> choices;
     Game::divider();
@@ -250,7 +256,7 @@ void Game::action() const //asking player to pick action
         Game::divider();
     }
     else {
-        cout << "Not Updated\n";
+        cout << "Please enter the accepted input only!!! (1/2/3)\n";
     }
 }
 
@@ -259,7 +265,7 @@ void Game::display() const
     Game info;
 
     Game::divider();
-    int spacevalue = ((column_ - 3) / 2) * 4 + 2; // 2
+    int spacevalue = ((column_ - 3) / 2) * 4 + 2; 
     for (int i = 0; i < spacevalue; i++) {
         cout << " ";
     }
@@ -336,7 +342,7 @@ void Game::display() const
 
 int main()
 {
-    srand(time(NULL));
+    // srand(time(NULL));
 
     Game game;
     game.startup();
