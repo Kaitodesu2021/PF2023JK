@@ -85,10 +85,10 @@ void Game::init(int column, int row)
 void Game::startup() const // startup interface
 {
     Game info;
+
     cout << "Assignment (Part 1)" << endl;
     cout << "===================" << endl;
     cout << "Launching Alien VS Zombies...\n" << endl;
-
     std::cout << "Press Enter to Continue <";
     std::cin.get();
     cout << "\n" << endl;
@@ -97,7 +97,7 @@ void Game::startup() const // startup interface
 void Game::board_settings() const // board size input
 {
     Game info;
-    
+
     cout << "================================" << endl;
     cout << "         Board Settings" << endl;
     cout << "================================" << endl;
@@ -220,6 +220,7 @@ void Game::divider() const
 void Game::action() const //asking player to pick action
 {
     Game game;
+
     char direction;
     int choices;
 
@@ -337,9 +338,9 @@ void Game::display() const
 
 int main()
 {
-    // srand(time(NULL));
-
+    srand(time(NULL));
     Game game;
+
     game.startup();
     game.default_settings();
 }
