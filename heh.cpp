@@ -24,6 +24,7 @@ using namespace std;
 int noOfcolumn = 5 ,noOfrow = 5 , zombies = 1, action;
 string name_setting = "Default Settings", title_spaces = "";
 
+
 class Game //column = column , row = row
 {
     private:
@@ -37,6 +38,7 @@ class Game //column = column , row = row
         char yesno;
         int action_input;
         int row_true = 0, column_true = 0, zombie_true = 0;
+    
         
         Game(int column = noOfcolumn , int row = noOfrow);
         void init(int column, int row);
@@ -45,11 +47,13 @@ class Game //column = column , row = row
         void display() const, divider() const;
         void action() const;
         void move_alien(char direction);
+        
 };
 
 Game::Game(int column, int row)
 {
     init(column, row); 
+    
 }
 
 void Game::init(int column, int row)
@@ -81,7 +85,9 @@ void Game::init(int column, int row)
 
     x_axis = column_ / 2;
     y_axis = row_ / 2;
+    
     map_[y_axis][x_axis] = 'A';
+
 }
 
 void Game::startup() const // startup interface
@@ -127,6 +133,7 @@ void Game::board_settings() const // board size input
     }
 }
 
+
 void Game::move_alien(char direction) 
 {
     Game game;
@@ -137,24 +144,28 @@ void Game::move_alien(char direction)
         {
         y_axis--; //go up
         }
+    
     }
     else if ((direction == 's') && (y_axis < noOfcolumn - 1)) {
         while (y_axis < noOfcolumn - 1) 
         {
         y_axis++; //go down
         }
+        
     }
     else if ((direction == 'a') && (x_axis > 0)) {
         while (x_axis > 0) 
         {
         x_axis--; //go left
         }
+        
     }
     else if ((direction == 'd') && (x_axis < noOfrow - 1)) {
         while (x_axis < noOfrow - 1) 
         {
         x_axis++; //go right
         }
+        
     }
     else {
         cout << "Please enter accepted input only!!! (w/a/s/d)" << endl;
