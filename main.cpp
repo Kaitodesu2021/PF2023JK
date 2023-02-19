@@ -24,7 +24,7 @@ using namespace std;
 int noOfcolumn = 5 ,noOfrow = 5 , zombies = 1, action;
 string name_setting = "Default Settings", title_spaces = "";
 
-class Game //column = column , row = row
+class Game
 {
     private:
         vector<vector<char>> map_; 
@@ -58,8 +58,6 @@ void Game::init(int column, int row)
     row_ = row;
 
     char objects[] = {'^', 'v', '>', '<', 'h', 'p', 'r', ' ', ' ', ' '}; //objects
-    char zombies_array[] = {'1'}; //zombies
-
     int noOfObjects = 10; // number of objects in the objects array
 
     // create dynamic 2D array using vector
@@ -87,10 +85,10 @@ void Game::init(int column, int row)
 void Game::startup() const // startup interface
 {
     Game info;
+
     cout << "Assignment (Part 1)" << endl;
     cout << "===================" << endl;
     cout << "Launching Alien VS Zombies...\n" << endl;
-
     std::cout << "Press Enter to Continue <";
     std::cin.get();
     cout << "\n" << endl;
@@ -99,7 +97,7 @@ void Game::startup() const // startup interface
 void Game::board_settings() const // board size input
 {
     Game info;
-    
+
     cout << "================================" << endl;
     cout << "         Board Settings" << endl;
     cout << "================================" << endl;
@@ -131,35 +129,27 @@ void Game::move_alien(char direction)
 {
     Game game;
 
-    if ((direction == 'w') && (y_axis > 0)) 
-    {
-        while (y_axis > 0) 
-        {
+    if ((direction == 'w') && (y_axis > 0)) {
+        while (y_axis > 0) {
         map_[y_axis][x_axis] = '.'; // leaving trails
         y_axis--; //go up
         }
     }
-    else if ((direction == 's') && (y_axis < noOfcolumn - 1)) 
-    {
-        while (y_axis < noOfcolumn - 1) \
-        {
-        map_[y_axis][x_axis] = '.';
+    else if ((direction == 's') && (y_axis < noOfcolumn - 1)) {
+        while (y_axis < noOfcolumn - 1) {
+        map_[y_axis][x_axis] = '.'; // leaving trails
         y_axis++; //go down
         }
     }
-    else if ((direction == 'a') && (x_axis > 0)) 
-    {
-        while (x_axis > 0) 
-        {
-        map_[y_axis][x_axis] = '.';
+    else if ((direction == 'a') && (x_axis > 0)) {
+        while (x_axis > 0) {
+        map_[y_axis][x_axis] = '.'; // leaving trails
         x_axis--; //go left
         }
     }
-    else if ((direction == 'd') && (x_axis < noOfrow - 1)) 
-    {
-        while (x_axis < noOfrow - 1) 
-        {
-        map_[y_axis][x_axis] = '.';    
+    else if ((direction == 'd') && (x_axis < noOfrow - 1)) {
+        while (x_axis < noOfrow - 1) {
+        map_[y_axis][x_axis] = '.'; // leaving trails    
         x_axis++; //go right
         }
     }
@@ -167,7 +157,6 @@ void Game::move_alien(char direction)
         cout << "Please enter accepted input only!!! (w/a/s/d)" << endl;
         game.display();
     }
-
     map_[y_axis][x_axis] = 'A';
 }
 
@@ -231,12 +220,20 @@ void Game::divider() const
 void Game::action() const //asking player to pick action
 {
     Game game;
+
     char direction;
     int choices;
-    cout << "1. Move Alien" << endl;
-    cout << "2. Move Arrow" << endl;
-    cout << "3. Exit Game" << endl;
-    cout << "Pick action: ";
+
+    cout << ">> Action" << endl; // action statement
+    cout << "  1. Move Alien" << endl;
+    cout << "  2. Move Arrow" << endl;
+    cout << "  3. Exit Game" << endl;
+    for (int j = 0; j < column_; ++j) // soft divider
+    {
+        cout << "----";
+    }
+    cout << "--------" << endl;
+    cout << "Pick action: "; // asked for input
     cin >> choices;
     Game::divider();
 
@@ -257,8 +254,8 @@ void Game::action() const //asking player to pick action
         exit(0);
         Game::divider();
     }
-    else {
-        cout << "Not Updated\n";
+    else if ((choices != 1) && (choices != 2) && (choices != 3)) {
+        cout << "Please enter the accepted input only!!! (1/2/3)\n";
     }
 }
 
@@ -267,7 +264,7 @@ void Game::display() const
     Game info;
 
     Game::divider();
-    int spacevalue = ((column_ - 3) / 2) * 4 + 2; // 2
+    int spacevalue = ((column_ - 3) / 2) * 4 + 2; 
     for (int i = 0; i < spacevalue; i++) {
         cout << " ";
     }
@@ -289,9 +286,6 @@ void Game::display() const
 
         // display cell content and border of each column
         cout << "";
-
-        int midrow = noOfrow / 2;
-        int midcolumn = noOfcolumn / 2;
 
         for (int j = 0; j < column_; ++j)
         {
@@ -345,8 +339,8 @@ void Game::display() const
 int main()
 {
     srand(time(NULL));
-
     Game game;
+
     game.startup();
     game.default_settings();
 }
